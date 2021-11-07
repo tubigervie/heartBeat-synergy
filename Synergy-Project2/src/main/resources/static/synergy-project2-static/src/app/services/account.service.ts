@@ -38,7 +38,11 @@ export class AccountService {
   }
 
   searchSongServ(token:string, song:string):Observable<Object> {
-    return this.http.get(this.requestUrl + 'search?q=' +song+'&type=track', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
+    return this.http.get(this.requestUrl + 'search?q=' +song+'&type=track&market=us&offset=0&limit=5', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
+  }
+
+  getSongServ(token:string, songId:string):Observable<Object> {
+    return this.http.get(this.requestUrl +'tracks/'+songId +'?market=us', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
   }
     
 }

@@ -13,6 +13,8 @@ export class LoginPageComponent implements OnInit {
   public newReleases:string = '';
   public song:string = '';
   public songResult:string = '';
+  public songId:string = '';
+  public songResultArray: any[] = [];
 
   constructor(private accountService:AccountService) { }
 
@@ -40,8 +42,23 @@ export class LoginPageComponent implements OnInit {
    searchSong() {
      this.accountService.searchSongServ(this.token, this.song).subscribe(
       (data:Object)=> {
-        this.songResult = JSON.stringify(data);
-        console.log(this.songResult);
+        this.songResultArray = Object.entries(data); 
+        console.log(Object.keys(data));
+        console.log(Object.values(data));
+        let innerData:any[]=Object.values(data);
+        console.log(innerData);
+        let innerInfo:any[]=Object.values(innerData[0]);
+        console.log(innerInfo);
+        let innerSongs:any[]=Object.values(innerInfo[1]);
+        console.log(innerSongs);
+        let innerSongsInfo:any[]=Object.values(innerSongs[0]);
+        console.log(innerSongsInfo);
+        let innerSongsInfoUrl:any[]=Object.values(innerSongsInfo[6]);
+        console.log(innerSongsInfoUrl);
+        let finalUrl = innerSongsInfoUrl[0];
+        console.log(finalUrl);
+        this.songResult = (finalUrl);
+       
       }
      )
    }
@@ -49,6 +66,15 @@ export class LoginPageComponent implements OnInit {
    clearResults() {
      this.songResult = '';
      this.newReleases = '';
+   }
+
+   getSong() {
+     this.accountService.getSongServ(this.token, this.songId).subscribe(
+      (data:Object)=> {
+        this.songResult = JSON.stringify(data);
+        console.log(this.songResult);
+      }
+     )
    }
    
 
