@@ -2,3 +2,28 @@
 Click to link your spotify account
 </button>
 
+<div>
+   The value of your access token is {{token}}
+</div>
+
+<button (click) = "getNewReleases()" type="button">
+    Click to get new releases
+</button>
+
+<div>
+    The new releases are {{newReleases}}
+</div>
+
+<input [(ngModel)]="song"> 
+<button (click) = "searchSong()" type="button">
+    Click to submit song search
+</button>
+
+<div>
+    Information about this song:
+    {{songResult}}
+</div>
+
+<button (click) = "clearResults()"> 
+    click this to clear results;
+</button>

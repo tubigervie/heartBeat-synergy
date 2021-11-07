@@ -2,13 +2,17 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
 
+  
   clientId:string = 'b652928c89cc4c72b3c12c1c255bb631';
   clientSecret:string = '3ba7579a1a7c4f09bc20a5cee2ff1849';
+
+  requestUrl:string = 'https://api.spotify.com/v1/';
   authUrl:string = 'https://accounts.spotify.com/authorize';
   tokenUrl:string = 'https://accounts.spotify.com/api/token';
 
@@ -20,10 +24,21 @@ export class AccountService {
 
   constructor(private http:HttpClient) { }
 
-  getToken():Observable<any> {
+  getTokenServ():Observable<Object> {
+    
+  return this.http.post(this.tokenUrl, this.authTokenBody, { headers: this.authTokenHeaders }) as Observable<Object>;
 
-    return this.http.post(this.tokenUrl, this.authTokenBody, { headers: this.authTokenHeaders }) as Observable<any>;
+  }
 
+
+  getnewReleasesServ(token:string):Observable<Object> {
+
+
+    return this.http.get(this.requestUrl + 'browse/new-releases', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
+  }
+
+  searchSongServ(token:string, song:string):Observable<Object> {
+    return this.http.get(this.requestUrl + 'search?q=' +song+'&type=track', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
   }
     
 }
