@@ -7,6 +7,7 @@ import { AccountService } from '../services/account.service';
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })
+
 export class LoginPageComponent implements OnInit {
 
   public token:string = '';
@@ -19,6 +20,7 @@ export class LoginPageComponent implements OnInit {
   public albumName:string = '';
   public songName:string = '';
   public albumImageUrl:string = '';
+  public genres:string = '';
  
 
   constructor(private accountService:AccountService) { }
@@ -96,6 +98,13 @@ export class LoginPageComponent implements OnInit {
       }
      )
    }
-   
 
+   getGenres(){
+     this.accountService.getGenres(this.token).subscribe(
+      (data:Object)=> {
+        this.genres = JSON.stringify(data);
+        console.log("in getGenres()");
+      }
+     )
+    }
 }

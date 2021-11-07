@@ -32,8 +32,6 @@ export class AccountService {
 
 
   getnewReleasesServ(token:string):Observable<Object> {
-
-
     return this.http.get(this.requestUrl + 'browse/new-releases', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
   }
 
@@ -43,6 +41,10 @@ export class AccountService {
 
   getSongServ(token:string, songId:string):Observable<Object> {
     return this.http.get(this.requestUrl +'tracks/'+songId +'?market=us', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
+  }
+
+  getGenres(token:string):Observable<Object> {
+    return this.http.get(this.requestUrl + 'recommendations/available-genre-seeds', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
   }
     
 }

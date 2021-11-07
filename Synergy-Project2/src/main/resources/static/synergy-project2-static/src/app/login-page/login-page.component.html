@@ -41,6 +41,14 @@ Click to link your spotify account
 <img [src] = "albumImageUrl">
 <br>
 
+<div>
+    The genres are: {{genres}}
+</div>
+<button (click) = "getGenres()" type="button">
+    Click to see all genres
+</button>
+<br>
+
 <button (click) = "clearResults()"> 
     click this to clear results
 </button>
