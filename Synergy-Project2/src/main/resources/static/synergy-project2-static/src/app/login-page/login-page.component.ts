@@ -21,6 +21,7 @@ export class LoginPageComponent implements OnInit {
   public songName:string = '';
   public albumImageUrl:string = '';
   public genres:string = '';
+  public topArtists:string = '';
  
 
   constructor(private accountService:AccountService) { }
@@ -107,4 +108,13 @@ export class LoginPageComponent implements OnInit {
       }
      )
     }
+
+    getTopArtists(){
+      this.accountService.getTopArtists(this.token).subscribe(
+       (data:Object)=> {
+         this.topArtists = JSON.stringify(data);
+         console.log("in getTopArtists()");
+       }
+      )
+     }
 }

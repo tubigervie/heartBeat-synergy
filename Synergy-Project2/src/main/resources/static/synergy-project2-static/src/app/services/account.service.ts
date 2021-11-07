@@ -46,5 +46,9 @@ export class AccountService {
   getGenres(token:string):Observable<Object> {
     return this.http.get(this.requestUrl + 'recommendations/available-genre-seeds', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
   }
+
+  getTopArtists(token:string):Observable<Object>{
+    return this.http.get(this.requestUrl + 'recommendations/me/top/artists?limit=5', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
+  }
     
 }
