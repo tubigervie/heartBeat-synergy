@@ -6,6 +6,14 @@ Click to link your spotify account
    The value of your access token is {{token}}
 </div>
 
+<button (click)="connectUserAccount()" type="button">
+    Click to get implicit access token
+</button>
+    
+<div>
+    The value of your access token is in console
+</div>
+
 <button (click) = "getNewReleases()" type="button">
     Click to get new releases
 </button>

@@ -38,6 +38,10 @@ export class LoginPageComponent implements OnInit {
     console.log(this.token);} );     
   }
 
+  connectUserAccount() {
+    this.accountService.getAccessToken();   
+  }
+
   getNewReleases() {
     this.accountService.getnewReleasesServ(this.token).subscribe(
       (data:Object)=> {
@@ -66,6 +70,8 @@ export class LoginPageComponent implements OnInit {
    clearResults() {
      this.songResult = '';
      this.newReleases = '';
+     this.genres = '';
+     this.topArtists = '';
    }
 
    getSong() {
