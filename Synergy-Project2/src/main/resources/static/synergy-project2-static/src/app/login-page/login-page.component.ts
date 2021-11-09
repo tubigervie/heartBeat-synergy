@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { AccountService } from '../services/account.service';
+import { TransferService } from '../services/transfer.service';
 
 @Component({
   selector: 'app-login-page',
@@ -9,102 +10,32 @@ import { AccountService } from '../services/account.service';
 })
 
 export class LoginPageComponent implements OnInit {
-
+  public username: string = '';
+  public password: string = ''
   public token:string = '';
-  public newReleases:string = '';
-  public song:string = '';
-  public songUrl:string = '';
-  public songResult:string = '';
-  public songId:string = '';
-  public artistName:string = '';
-  public albumName:string = '';
-  public songName:string = '';
-  public albumImageUrl:string = '';
-  public genres:string = '';
-  public topArtists:string = '';
- 
 
-  constructor(private accountService:AccountService) { }
+
+  constructor(private router: Router, private accountService:AccountService, private transferService:TransferService) { }
 
   ngOnInit(): void {
   }
+  
 
-  connectAccount() {
-  this.accountService.getTokenServ().subscribe(
-    (data:Object)=> {
-      console.log(data)
-    console.log(Object.values(data))
-      this.token = Object.values(data)[0]
-    console.log(this.token);} );     
+  login() {
+    
+    if(this.accountService.loginServ(this.username,this.password)) {
+      this.transferService.setUsername(this.username);
+      this.transferService.setPassword(this.password);
+      this.accountService.getTokenServ().subscribe(
+        (data: Object) => {
+          this.token = Object.values(data)[0]
+          this.transferService.setToken(this.token);
+        });
+      this.router.navigate(['home-page'])}
+    
   }
 
-  connectUserAccount() {
-    this.accountService.getAccessToken();   
-  }
 
-  getNewReleases() {
-    this.accountService.getnewReleasesServ(this.token).subscribe(
-      (data:Object)=> {
-        this.newReleases = JSON.stringify(data);
-      }
-    )
-
-   }
-
-   searchSong() {
-     this.accountService.searchSongServ(this.token, this.song).subscribe(
-      (data:Object)=> {
-        let innerData:any[]=Object.values(data);
-        let innerInfo:any[]=Object.values(innerData[0]);
-        let innerSongs:any[]=Object.values(innerInfo[1]);
-        let innerSongsInfo:any[]=Object.values(innerSongs[0]);
-        let innerSongsInfoUrl:any[]=Object.values(innerSongsInfo[6]);
-        let finalUrl = innerSongsInfoUrl[0];
-        this.songId= finalUrl.substring(31, finalUrl.length);
-        this.songUrl =finalUrl;
-       
-      }
-     )
-   }
-
-   clearResults() {
-     this.songResult = '';
-     this.newReleases = '';
-     this.genres = '';
-     this.topArtists = '';
-   }
-
-   getSong() {
-     this.accountService.getSongServ(this.token, this.songId).subscribe(
-      (data:Object)=> {
-        this.songResult = JSON.stringify(data);
-        let innerData = Object.values(data);
-        console.log(innerData);
-        console.log(JSON.stringify(innerData));
-        let innerArtistandAlbum:any[] = Object.values(innerData[0]);
-        console.log(innerArtistandAlbum);
-        let innerArtistInfo:any[] = Object.values(innerArtistandAlbum[1]);
-        console.log(innerArtistInfo);
-        let innerArtistDetails:any[] = Object.values(innerArtistInfo[0]);
-        console.log(innerArtistDetails);
-        let artistName = innerArtistDetails[3];
-        console.log(artistName);
-        this.artistName = artistName;
-        let albumName = innerArtistandAlbum[6];
-        this.albumName = albumName;
-        let songName = innerData[11];
-        this.songName = songName;
-        let innerAlbumImageInfo:any[] = Object.values(innerArtistandAlbum[5]);
-        console.log(innerAlbumImageInfo);
-        let innerAlbumImageDetails:any[] = Object.values(innerAlbumImageInfo[0]);
-        console.log(innerAlbumImageDetails);
-        let albumImageUrl = innerAlbumImageDetails[1];
-        console.log(albumImageUrl);
-        this.albumImageUrl = albumImageUrl;
-
-      }
-     )
-   }
 
    getGenres(){
      this.accountService.getGenres(this.token).subscribe(
@@ -124,3 +55,4 @@ export class LoginPageComponent implements OnInit {
       )
      }
 }
+
