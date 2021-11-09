@@ -32,11 +32,57 @@ public class HBUserController
 		this.userService = service;
 	}
 	
-	@PostMapping
-	public ResponseEntity<List<HBUserAccount>> newHBTopGenre(@RequestBody HBTopGenre g){
-		userService.addGenre(g);
-		return ResponseEntity.status(HttpStatus.OK).body(userService.findAllUserAccounts());
+	@GetMapping("/{id}/genres")
+	public List<HBTopGenre> getAccountTopGenres(@PathVariable("id") int id){
+		List<HBTopGenre> genres = userService.findTopGenresByUserId(id);
+		return genres;
 	}
+	
+	@PostMapping("/{id}/genre")
+	public ResponseEntity<HBUserAccount> addTopGenreToAccount(@RequestBody HBTopGenre genre)
+	{
+		boolean isAdded = userService.addGenre(genre);
+		if(!isAdded) {
+			return ResponseEntity.status(400).build();
+		}
+		else {
+			return ResponseEntity.status(201).build();
+		}
+		
+	}
+	
+	@PostMapping("/{id}/genres")
+	public ResponseEntity<HBUserAccount> addTopGenresToAccount(@PathVariable("id") int id, @RequestBody List<HBTopGenre> genres)
+	{
+		HBUserAccount account = userService.findAccountById(id);
+		if(account == null) {
+			return ResponseEntity.status(400).build();
+		}
+		boolean clearedPreviousGenres = userService.deleteHBUserTopGenres(account);
+		if(!clearedPreviousGenres) {
+			return ResponseEntity.status(400).build();
+		}
+		boolean addedAllArtists = userService.addHBUserTopGenres(genres);
+		if(!addedAllArtists) {
+			return ResponseEntity.status(400).build();
+		}
+		return ResponseEntity.status(200).build();
+	}
+	
+	@DeleteMapping("/{id}/genres")
+	public ResponseEntity<HBUserAccount> deleteTopGenresFromAccount(@PathVariable("id") int id)
+	{
+		HBUserAccount account = userService.findAccountById(id);
+		if(account == null) {
+			return ResponseEntity.status(400).build();
+		}
+		boolean clearedPreviousGenres = userService.deleteHBUserTopGenres(account);
+		if(!clearedPreviousGenres) {
+			return ResponseEntity.status(400).build();
+		}
+		return ResponseEntity.status(200).build();
+	}
+
 	
 	@GetMapping
 	public List<HBUserAccount> getAllAccounts()

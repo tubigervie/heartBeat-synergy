@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.models.HBTopArtist;
 import com.revature.models.HBTopGenre;
@@ -31,9 +32,40 @@ public class HBUserService
 		this.genreDAO = genreDAO;
 	}
 	
-	public void addGenre(HBTopGenre g){
-		genreDAO.save(g);
+	public boolean addGenre(HBTopGenre genre){
+		try {
+			genreDAO.save(genre);
+			return true;
+		}
+		catch(IllegalArgumentException e){
+			
+			return false;
+		}
+		
 	}
+	
+	public boolean addHBUserTopGenres(List<HBTopGenre> genres)
+	{
+		for(HBTopGenre genre : genres)
+		{
+			if(!addGenre(genre))
+				return false;
+		}
+		return true;
+	}
+	
+	public List<HBTopGenre> findTopGenresByUserId(int id) {
+		HBUserAccount account = findAccountById(id);
+		return genreDAO.findByUser(account);
+	}
+	
+	@Transactional
+	public boolean deleteHBUserTopGenres(HBUserAccount user)
+	{
+		genreDAO.deleteByUser(user);
+		return true;
+	}
+	
 	
 	public List<HBUserAccount> findAllUserAccounts()
 	{
