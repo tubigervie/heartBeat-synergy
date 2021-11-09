@@ -2,8 +2,6 @@ package com.revature.models;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -13,13 +11,16 @@ import com.sun.istack.NotNull;
 
 @Entity
 public class HBTopArtist 
-{
+{	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY) 
-	private int id;
-	
 	@NotNull
 	private String artistId;
+	
+	@NotNull
+	private String artistName;
+	
+	@NotNull
+	private String artistImage;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn
@@ -27,29 +28,32 @@ public class HBTopArtist
 	@NotNull
 	private HBUserAccount user;
 	
-	public HBTopArtist(int id, String artistId, HBUserAccount user) {
+	public HBTopArtist(int id, String artistId, String artistName, String artistImage, HBUserAccount user) {
 		super();
-		this.id = id;
 		this.artistId = artistId;
+		this.artistName = artistName;
+		this.artistImage = artistImage;
 		this.user = user;
 	}
 
-	public HBTopArtist(String artistId, HBUserAccount user) {
-		super();
-		this.artistId = artistId;
-		this.user = user;
+	public String getArtistName() {
+		return artistName;
+	}
+
+	public void setArtistName(String artistName) {
+		this.artistName = artistName;
+	}
+
+	public String getArtistImage() {
+		return artistImage;
+	}
+
+	public void setArtistImage(String artistImage) {
+		this.artistImage = artistImage;
 	}
 
 	public HBTopArtist() {
 		super();
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getArtistId() {

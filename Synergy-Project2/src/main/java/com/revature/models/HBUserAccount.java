@@ -37,17 +37,17 @@ public class HBUserAccount
 	
 	private String anthem;
 	
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="user")
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="user")
 	@JsonManagedReference
 	private List<HBTopArtist> topArtists;
 	
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="user")
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="user")
 	@JsonManagedReference
-	private List<HBTopArtist> topGenres;
+	private List<HBTopGenre> topGenres;
 
 	public HBUserAccount(int id, String username, String password, String firstName, String lastName,
 			String profileDescription, String playlist, String anthem, List<HBTopArtist> topArtists,
-			List<HBTopArtist> topGenres) {
+			List<HBTopGenre> topGenres) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -62,7 +62,7 @@ public class HBUserAccount
 	}	
 
 	public HBUserAccount(String username, String password, String firstName, String lastName, String profileDescription,
-			String playlist, String anthem, List<HBTopArtist> topArtists, List<HBTopArtist> topGenres) {
+			String playlist, String anthem, List<HBTopArtist> topArtists, List<HBTopGenre> topGenres) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -159,11 +159,11 @@ public class HBUserAccount
 		this.topArtists = topArtists;
 	}
 
-	public List<HBTopArtist> getTopGenres() {
+	public List<HBTopGenre> getTopGenres() {
 		return topGenres;
 	}
 
-	public void setTopGenres(List<HBTopArtist> topGenres) {
+	public void setTopGenres(List<HBTopGenre> topGenres) {
 		this.topGenres = topGenres;
 	}
 

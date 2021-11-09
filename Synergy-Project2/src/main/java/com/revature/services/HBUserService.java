@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,12 +33,24 @@ public class HBUserService
 	
 	public HBUserAccount findAccountById(int id)
 	{
-		return userDAO.findById(id).get();
+		try {
+			return userDAO.findById(id).get();
+		}
+		catch(NoSuchElementException e)
+		{
+			return null;
+		}
 	}
 	
 	public HBUserAccount findAccountByUsername(String username)
 	{
-		return userDAO.findAccountByUsername(username).get();
+		try {
+			return userDAO.findAccountByUsername(username).get();
+		}
+		catch(NoSuchElementException e)
+		{
+			return null;
+		}
 	}
 	
 	public boolean addOrUpdateHBUserAccount(HBUserAccount account)
