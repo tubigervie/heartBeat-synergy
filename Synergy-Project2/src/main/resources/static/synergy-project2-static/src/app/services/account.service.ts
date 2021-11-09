@@ -44,5 +44,9 @@ export class AccountService {
   getSongServ(token:string, songId:string):Observable<Object> {
     return this.http.get(this.requestUrl +'tracks/'+songId +'?market=us', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
   }
+
+  loginServ(username:string, password:string):boolean {
+    return true;
+  }
     
 }

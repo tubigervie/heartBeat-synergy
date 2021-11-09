@@ -1,0 +1,45 @@
+<div>
+    Welcome to your homepage {{username}}
+</div>
+<button (click)="connectAccount()" type="button">
+Click to link your spotify account
+</button>
+
+<div>
+   The value of your access token is {{token}}
+</div>
+
+<button (click) = "getNewReleases()" type="button">
+    Click to get new releases
+</button>
+
+<div>
+    The new releases are {{newReleases}}
+</div>
+
+<label for="songInput">song name</label>
+<input [(ngModel)]="songSearch" id="songInput">
+<label for="artistInput">artist name</label>
+<input [(ngModel)] = "artistSearch" id="albumInput"> 
+
+
+<button (click) = "getSong()" type="button">
+    Get info about this song:
+</button>
+
+<div>
+    Information about this song:
+    artist name: 
+    {{track?.trackArtist}}
+    album name: 
+    {{track?.trackAlbum}}
+    song name: 
+    {{track?.trackName}}
+   album image: 
+</div>
+<img [src] = "albumImageUrl">
+<br>
+
+<button (click) = "clearResults()"> 
+    click this to clear results
+</button>
