@@ -8,10 +8,12 @@ import { TransferService } from '../services/transfer.service';
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })
+
 export class LoginPageComponent implements OnInit {
   public username: string = '';
   public password: string = ''
   public token:string = '';
+
 
   constructor(private router: Router, private accountService:AccountService, private transferService:TransferService) { }
 
@@ -33,7 +35,24 @@ export class LoginPageComponent implements OnInit {
     
   }
 
- 
 
+
+   getGenres(){
+     this.accountService.getGenres(this.token).subscribe(
+      (data:Object)=> {
+        this.genres = JSON.stringify(data);
+        console.log("in getGenres()");
+      }
+     )
+    }
+
+    getTopArtists(){
+      this.accountService.getTopArtists(this.token).subscribe(
+       (data:Object)=> {
+         this.topArtists = JSON.stringify(data);
+         console.log("in getTopArtists()");
+       }
+      )
+     }
 }
 
