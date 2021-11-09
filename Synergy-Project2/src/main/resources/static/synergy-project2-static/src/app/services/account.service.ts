@@ -80,9 +80,6 @@ serverUrl:string = 'http://localhost:8083';
   getnewReleasesServ(token:string):Observable<Object> {
     return this.http.get(this.requestUrl + 'browse/new-releases', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
 
- 
-
-return this.http.get(this.requestUrl + 'browse/new-releases', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
   }
 
   searchSongServ(token:string, song:string, artist:string):Observable<Object> {
@@ -101,8 +98,9 @@ return this.http.get(this.requestUrl + 'browse/new-releases', {headers: new Http
   // need to fix this - needs to take the OAUTH token
   getTopArtists(token:string):Observable<Object>{
     return this.http.get(this.requestUrl + 'recommendations/me/top/artists?limit=5', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
- 
-  loginServ(username:string, password:string) {
+ }
+  loginServ(username:string, password:string):boolean {
+    return true;
   }
     
   searchArtistServ(token:string, artist:string):Observable<Object> {

@@ -36,23 +36,5 @@ export class LoginPageComponent implements OnInit {
   }
 
 
-
-   getGenres(){
-     this.accountService.getGenres(this.token).subscribe(
-      (data:Object)=> {
-        this.genres = JSON.stringify(data);
-        console.log("in getGenres()");
-      }
-     )
-    }
-
-    getTopArtists(){
-      this.accountService.getTopArtists(this.token).subscribe(
-       (data:Object)=> {
-         this.topArtists = JSON.stringify(data);
-         console.log("in getTopArtists()");
-       }
-      )
-     }
 }
 

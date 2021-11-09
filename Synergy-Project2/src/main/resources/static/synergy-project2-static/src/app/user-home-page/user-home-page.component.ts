@@ -20,6 +20,8 @@ export class HomePageComponent implements OnInit {
   public songResult: string = '';
   public songId: string = '';
   public albumImageUrl: string = '';
+  public genres:string = '';
+  public topArtists:string = '';
   public track:Track|null = null;
   public artist:Artist|null = null;
   public getArtistSearch:string = '';
@@ -93,9 +95,31 @@ export class HomePageComponent implements OnInit {
         let innerArtistImageDetails:any[]=Object.values(innerArtistSearchArray[5]);
         let innerArtistImageArray:any[]=Object.values(innerArtistImageDetails[0]);
         let innerArtistImage = innerArtistImageArray[1];
-        let artist = new Artist(innerArtistId, innerArtistName, innerArtistImage);
+        let artist = new Artist(innerArtistId, innerArtistName, innerArtistImage); 
+        console.log(Object.values(artist));
         return artist;
+       
     })
     return new Artist('','','');
 }
+
+
+
+getGenres(){
+  this.accountService.getGenres(this.token).subscribe(
+   (data:Object)=> {
+     this.genres = JSON.stringify(data);
+     console.log("in getGenres()");
+   }
+  )
+ }
+
+ getTopArtists(){
+   this.accountService.getTopArtists(this.token).subscribe(
+    (data:Object)=> {
+      this.topArtists = JSON.stringify(data);
+      console.log("in getTopArtists()");
+    }
+   )
+  }
 }
