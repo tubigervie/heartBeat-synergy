@@ -35,6 +35,11 @@ public class HBUserService
 		return userDAO.findById(id).get();
 	}
 	
+	public HBUserAccount findAccountByUsername(String username)
+	{
+		return userDAO.findAccountByUsername(username).get();
+	}
+	
 	public boolean addOrUpdateHBUserAccount(HBUserAccount account)
 	{
 		try {
