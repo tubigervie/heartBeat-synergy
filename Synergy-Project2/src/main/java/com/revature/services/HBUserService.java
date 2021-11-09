@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.models.HBTopArtist;
+import com.revature.models.HBTopGenre;
 import com.revature.models.HBUserAccount;
 import com.revature.repos.HBTopArtistDAO;
+import com.revature.repos.HBTopGenreDAO;
 import com.revature.repos.HBUserDAO;
 
 @Service
@@ -19,10 +21,18 @@ public class HBUserService
 	@Autowired
 	private HBTopArtistDAO artistDAO;
 	
-	public HBUserService(HBUserDAO userDAO, HBTopArtistDAO artistDAO)
+	@Autowired
+	private HBTopGenreDAO genreDAO;
+	
+	public HBUserService(HBUserDAO userDAO, HBTopArtistDAO artistDAO, HBTopGenreDAO genreDAO)
 	{
 		this.userDAO = userDAO;
 		this.artistDAO = artistDAO;
+		this.genreDAO = genreDAO;
+	}
+	
+	public void addGenre(HBTopGenre g){
+		genreDAO.save(g);
 	}
 	
 	public List<HBUserAccount> findAllUserAccounts()
