@@ -8,6 +8,8 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 })
 export class AccountService {
 
+  //*********************************Spotify api variables********************************
+
   // groups spotify app account
   // clientId:string = 'b652928c89cc4c72b3c12c1c255bb631';
   // clientSecret:string = '3ba7579a1a7c4f09bc20a5cee2ff1849';
@@ -35,7 +37,10 @@ serverUrl:string = 'http://localhost:8083';
   authTokenBody = new URLSearchParams({'grant_type':'client_credentials'});
   authTokenHeaders = new HttpHeaders({'Authorization':'Basic ' +this.base64Credentials, 'Content-Type': 'application/x-www-form-urlencoded' });
 
+  //********************************************Localhost Variables******************************* */
   constructor(private http:HttpClient) { }
+
+  //*******************************************Spotify API Functions******************************** */
 
   getTokenServ():Observable<Object> {
     
@@ -99,9 +104,7 @@ serverUrl:string = 'http://localhost:8083';
   getTopArtists(token:string):Observable<Object>{
     return this.http.get(this.requestUrl + 'recommendations/me/top/artists?limit=5', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
  }
-  loginServ(username:string, password:string):boolean {
-    return true;
-  }
+ 
     
   searchArtistServ(token:string, artist:string):Observable<Object> {
     return this.http.get(this.requestUrl + 'search?q=' +artist+ '&type=artist&market=us&offset=0&limit=5', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
@@ -109,6 +112,12 @@ serverUrl:string = 'http://localhost:8083';
 
   getArtistServ(token:string, artistId:string):Observable<Object> {
     return this.http.get(this.requestUrl +'artists/'+artistId +'?market=us', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
+  }
+
+  //*********************************************Localhost functions******************************** */
+
+ loginServ(username:string, password:string):boolean {
+    return true
   }
 
 
