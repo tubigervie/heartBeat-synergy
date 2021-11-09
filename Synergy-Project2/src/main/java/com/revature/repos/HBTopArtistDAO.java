@@ -10,4 +10,6 @@ import com.revature.models.HBUserAccount;
 public interface HBTopArtistDAO extends JpaRepository<HBTopArtist, Integer>{
 
 	List<HBTopArtist> findByUser(HBUserAccount user);
+	
+	void deleteByUser(HBUserAccount user);
 }

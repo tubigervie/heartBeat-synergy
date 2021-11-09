@@ -50,13 +50,35 @@ public class HBUserController
 		return artists;
 	}
 	
-	@PostMapping("/{id}/artists")
+	@PostMapping("/{id}/artist")
 	public ResponseEntity<HBUserAccount> addTopArtistToAccount(@RequestBody HBTopArtist artist)
 	{
 		boolean isAdded = userService.addOrUpdateHBUserTopArtist(artist);
 		if(!isAdded)
 			return ResponseEntity.status(400).build();
 		return ResponseEntity.status(201).build();
+	}
+	
+	@PostMapping("/{id}/artists")
+	public ResponseEntity<HBUserAccount> addTopArtistsToAccount(@PathVariable("id") int id, @RequestBody List<HBTopArtist> artists)
+	{
+		HBUserAccount account = userService.findAccountById(id);
+		if(account == null) return ResponseEntity.status(400).build();
+		boolean clearedPreviousArtists = userService.deleteHBUserTopArtists(account);
+		if(!clearedPreviousArtists) return ResponseEntity.status(400).build();
+		boolean addedAllArtists = userService.addHBUserTopArtists(artists);
+		if(!addedAllArtists) return ResponseEntity.status(400).build();
+		return ResponseEntity.status(200).build();
+	}
+	
+	@DeleteMapping("/{id}/artists")
+	public ResponseEntity<HBUserAccount> deleteTopArtistsFromAccount(@PathVariable("id") int id)
+	{
+		HBUserAccount account = userService.findAccountById(id);
+		if(account == null) return ResponseEntity.status(400).build();
+		boolean clearedPreviousArtists = userService.deleteHBUserTopArtists(account);
+		if(!clearedPreviousArtists) return ResponseEntity.status(400).build();
+		return ResponseEntity.status(200).build();
 	}
 	
 	@PostMapping

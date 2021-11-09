@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.models.HBTopArtist;
 import com.revature.models.HBUserAccount;
@@ -77,6 +78,23 @@ public class HBUserService
 		{
 			return false;
 		}
+	}
+	
+	@Transactional
+	public boolean deleteHBUserTopArtists(HBUserAccount user)
+	{
+		artistDAO.deleteByUser(user);
+		return true;
+	}
+	
+	public boolean addHBUserTopArtists(List<HBTopArtist> artists)
+	{
+		for(HBTopArtist artist : artists)
+		{
+			if(!addOrUpdateHBUserTopArtist(artist))
+				return false;
+		}
+		return true;
 	}
 	
 	public List<HBTopArtist> findTopArtistsByUserID(int id)
