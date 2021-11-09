@@ -1,13 +1,8 @@
 <div>
     Welcome to your homepage {{username}}
 </div>
-<button (click)="connectAccount()" type="button">
-Click to link your spotify account
-</button>
 
-<div>
-   The value of your access token is {{token}}
-</div>
+
 
 <button (click) = "getNewReleases()" type="button">
     Click to get new releases
@@ -17,13 +12,20 @@ Click to link your spotify account
     The new releases are {{newReleases}}
 </div>
 
+<label for="artistSearch">search for an artist</label>
+<input [(ngModel)]="getArtistSearch" id="artistInput">
+<button (click) = "searchArtist()" type="button"> 
+    search a specific artist
+</button>
+
+
 <label for="songInput">song name</label>
 <input [(ngModel)]="songSearch" id="songInput">
 <label for="artistInput">artist name</label>
 <input [(ngModel)] = "artistSearch" id="albumInput"> 
 
 
-<button (click) = "getSong()" type="button">
+<button (click) = "searchSong()" type="button">
     Get info about this song:
 </button>
 

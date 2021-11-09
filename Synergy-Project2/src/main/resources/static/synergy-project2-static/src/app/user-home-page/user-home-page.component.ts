@@ -4,6 +4,7 @@ import { AccountService } from '../services/account.service';
 import { Track } from '../models/track';
 import { LoginPageComponent } from '../login-page/login-page.component';
 import { TransferService } from '../services/transfer.service';
+import { Artist } from '../models/artist';
 
 @Component({
   selector: 'app-user-home-page',
@@ -12,7 +13,7 @@ import { TransferService } from '../services/transfer.service';
 })
 export class HomePageComponent implements OnInit {
 
-  public token: string = '';
+  public token:string = this.transferService.getToken();
   public newReleases: string = '';
   public songSearch: string = '';
   public artistSearch: string = '';
@@ -20,22 +21,19 @@ export class HomePageComponent implements OnInit {
   public songId: string = '';
   public albumImageUrl: string = '';
   public track:Track|null = null;
+  public artist:Artist|null = null;
+  public getArtistSearch:string = '';
   public username:string = this.transferService.getUsername();
   public password:string = this.transferService.getPassword();
   constructor(private accountService: AccountService, private transferService:TransferService) { }
-
+ 
   ngOnInit(): void {
   }
 
-  connectAccount() {
-    this.accountService.getTokenServ().subscribe(
-      (data: Object) => {
-        this.token = Object.values(data)[0]
-      });
-  }
+
 
   getNewReleases() {
-    this.accountService.getnewReleasesServ(this.token).subscribe(
+    this.accountService.getnewReleasesServ(this.transferService.token).subscribe(
       (data: Object) => {
         this.newReleases = JSON.stringify(data);
       }
@@ -47,19 +45,18 @@ export class HomePageComponent implements OnInit {
     this.newReleases = '';
   }
 
-  getSong():Track {
-    this.accountService.searchSongServ(this.token, this.artistSearch, this.songSearch).subscribe(
+  searchSong():Track {
+    this.accountService.searchSongServ(this.transferService.token, this.artistSearch, this.songSearch).subscribe(
       (data: Object) => {
         let innerData: any[] = Object.values(data);
         let innerInfo: any[] = Object.values(innerData[0]);
         let innerSongs: any[] = Object.values(innerInfo[1]);
         let innerSongsInfo: any[] = Object.values(innerSongs[0]);
-        console.log(innerInfo);
         let innerSongsInfoUrl: any[] = Object.values(innerSongsInfo[6]);
         let finalUrl = innerSongsInfoUrl[0];
         this.songId = finalUrl.substring(31, finalUrl.length);
         
-        this.accountService.getSongServ(this.token, this.songId).subscribe(
+        this.accountService.getSongServ(this.transferService.token, this.songId).subscribe(
           (data: Object) => {
             let innerData = Object.values(data);
             let innerArtistandAlbum: any[] = Object.values(innerData[0]);
@@ -83,5 +80,22 @@ export class HomePageComponent implements OnInit {
   return new Track('','','','','');
   }
 
-
+  searchArtist():Artist {
+  this.accountService.searchArtistServ(this.transferService.token, this.getArtistSearch).subscribe(
+    (data: Object) => {
+        console.log(data);
+        let innerArtistSearch:any[] = Object.values(data);
+        let innerArtistSearchInfo:any[] = Object.values(innerArtistSearch[0]);
+        let innerArtistSearchDetails:any[] = Object.values(innerArtistSearchInfo[1]);
+        let innerArtistSearchArray:any[] = Object.values(innerArtistSearchDetails[0]);
+        let innerArtistId = innerArtistSearchArray[4];
+        let innerArtistName = innerArtistSearchArray[6];
+        let innerArtistImageDetails:any[]=Object.values(innerArtistSearchArray[5]);
+        let innerArtistImageArray:any[]=Object.values(innerArtistImageDetails[0]);
+        let innerArtistImage = innerArtistImageArray[1];
+        let artist = new Artist(innerArtistId, innerArtistName, innerArtistImage);
+        return artist;
+    })
+    return new Artist('','','');
+}
 }

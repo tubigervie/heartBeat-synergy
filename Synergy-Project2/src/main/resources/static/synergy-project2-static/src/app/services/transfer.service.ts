@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AccountService } from './account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +8,7 @@ export class TransferService {
 
   private username:string = '';
   private password:string = '';
+  public token:string = '';
 
   constructor() { }
 
@@ -23,5 +25,13 @@ export class TransferService {
 
   getPassword():string{
     return this.password
+  }
+
+  setToken(token:string) {
+    this.token=token;
+  }
+
+  getToken():string{
+    return this.token;
   }
 }
