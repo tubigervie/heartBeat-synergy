@@ -23,13 +23,10 @@ export class AccountService {
   token2Url:string = '';
 
   // additional params needed to create OAUTH 2.0 token
-  redirectUri:string = 'localhost:4200'; //figure out what goes here
-  callbackUrl:string = 'localhost:4200'; //figure out what goes here
+  redirectUri:string = 'http://localhost:4200'; //figure out what goes here
+  callbackUrl:string = 'http://localhost:4200'; //figure out what goes here
   responseType:string = 'code';
   scopes:string = 'user-library-read';
-
-  // tutorial params
-  // redirectUri:string = 'https%3A%2F%2Fapi-university.com%2F';
 
   
   base64Credentials = btoa(this.clientId+':'+this.clientSecret);
@@ -53,12 +50,12 @@ export class AccountService {
 
   }
 
-  // get OAUTH 2.0 token
-  getAuthTokenServ():Observable<Object> {
+  // // get OAUTH 2.0 token
+  // getAuthTokenServ():Observable<Object> {
     
-    return this.http.post(this.token2Url, this.authTokenBody, { headers: this.auth2TokenHeaders }) as Observable<Object>;
+  //   return this.http.post(this.token2Url, this.authTokenBody, { headers: this.auth2TokenHeaders }) as Observable<Object>;
   
-  }
+  // }
 
   // build OAUTH request
   buildRequest(client_id:string, redirect_uri:string, scopes:string){
@@ -73,6 +70,7 @@ export class AccountService {
     url += '&scope=' + encodeURIComponent(scopes);
     url += '&redirect_uri=' + encodeURIComponent(redirect_uri);
     url += '&state=' + encodeURIComponent(state);
+    url += '&callback_url=' + encodeURIComponent(this.callbackUrl);
 
     return url;
     
