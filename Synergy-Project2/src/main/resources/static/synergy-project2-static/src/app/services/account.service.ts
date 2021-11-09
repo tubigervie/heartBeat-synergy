@@ -23,18 +23,14 @@ export class AccountService {
   token2Url:string = '';
 
   // additional params needed to create OAUTH 2.0 token
-  redirectUri:string = 'http://localhost:4200'; //figure out what goes here
-  callbackUrl:string = 'http://localhost:4200'; //figure out what goes here
+  redirectUri:string = 'http://localhost:4200'; 
+  callbackUrl:string = 'http://localhost:4200'; 
   responseType:string = 'code';
-  scopes:string = 'user-library-read';
+  scopes:string = 'user-library-read'; //can edit this to your liking
 
-  
   base64Credentials = btoa(this.clientId+':'+this.clientSecret);
   authTokenBody = new URLSearchParams({'grant_type':'client_credentials'});
   authTokenHeaders = new HttpHeaders({'Authorization':'Basic ' +this.base64Credentials, 'Content-Type': 'application/x-www-form-urlencoded' });
-
-  // change this to match implicit token header
-  auth2TokenHeaders = new HttpHeaders({'Authorization':'Basic ' +this.base64Credentials, 'Content-Type': 'application/x-www-form-urlencoded' });
 
   constructor(private http:HttpClient) { }
 
@@ -45,30 +41,31 @@ export class AccountService {
   }
 
   getAccessToken(){
-    this.token2Url = this.buildRequest(this.clientId, this.redirectUri, this.scopes);
-    console.log(this.token2Url);
+    this.token2Url = this.buildRequest();
+    
+    /**
+     * redirects url to redirectUri value to access OAUTH token
+     * (If you aren't signed into spotify, you will need to sign in)
+     * 
+     * Then callbackUrl triggers and redirectsUri back 
+     * to our site with the newly generated access token
+     * now in the url
+     */
+    window.location.href = this.token2Url; // see above
+    console.log(this.token2Url); // janky solution just for testing
 
   }
 
-  // // get OAUTH 2.0 token
-  // getAuthTokenServ():Observable<Object> {
-    
-  //   return this.http.post(this.token2Url, this.authTokenBody, { headers: this.auth2TokenHeaders }) as Observable<Object>;
-  
-  // }
-
-  // build OAUTH request
-  buildRequest(client_id:string, redirect_uri:string, scopes:string){
-    // var client_id = 'CLIENT_ID';
-    // var redirect_uri = 'http://localhost:8888/callback';
+  // build OAUTH request using implicit grant method
+  buildRequest(){
 
     var state = 'r9XzPTQ8fjBqfwC5';
         
     var url = 'https://accounts.spotify.com/authorize';
     url += '?response_type=token';
-    url += '&client_id=' + encodeURIComponent(client_id);
-    url += '&scope=' + encodeURIComponent(scopes);
-    url += '&redirect_uri=' + encodeURIComponent(redirect_uri);
+    url += '&client_id=' + encodeURIComponent(this.clientId);
+    url += '&scope=' + encodeURIComponent(this.scopes);
+    url += '&redirect_uri=' + encodeURIComponent(this.redirectUri);
     url += '&state=' + encodeURIComponent(state);
     url += '&callback_url=' + encodeURIComponent(this.callbackUrl);
 
@@ -93,6 +90,7 @@ export class AccountService {
     return this.http.get(this.requestUrl + 'recommendations/available-genre-seeds', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
   }
 
+  // need to fix this - needs to take the OAUTH token
   getTopArtists(token:string):Observable<Object>{
     return this.http.get(this.requestUrl + 'recommendations/me/top/artists?limit=5', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
   }
