@@ -15,6 +15,7 @@ export class AccountService {
   requestUrl:string = 'https://api.spotify.com/v1/';
   authUrl:string = 'https://accounts.spotify.com/authorize';
   tokenUrl:string = 'https://accounts.spotify.com/api/token';
+  serverUrl:string = 'http://localhost:8083';
 
   
   base64Credentials = btoa(this.clientId+':'+this.clientSecret);
@@ -34,7 +35,7 @@ export class AccountService {
   getnewReleasesServ(token:string):Observable<Object> {
 
 
-    return this.http.get(this.requestUrl + 'browse/new-releases', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
+  return this.http.get(this.requestUrl + 'browse/new-releases', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
   }
 
   searchSongServ(token:string, song:string, artist:string):Observable<Object> {
@@ -44,5 +45,21 @@ export class AccountService {
   getSongServ(token:string, songId:string):Observable<Object> {
     return this.http.get(this.requestUrl +'tracks/'+songId +'?market=us', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
   }
+
+  loginServ(username:string, password:string) {
     
+   
+  }
+    
+  searchArtistServ(token:string, artist:string):Observable<Object> {
+    return this.http.get(this.requestUrl + 'search?q=' +artist+ '&type=artist&market=us&offset=0&limit=5', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
+  }
+
+  getArtistServ(token:string, artistId:string):Observable<Object> {
+    return this.http.get(this.requestUrl +'artists/'+artistId +'?market=us', {headers: new HttpHeaders({'Authorization': 'Bearer '+token })})
+  }
+
+
+
+  
 }
