@@ -1,7 +1,9 @@
 package com.revature.services;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,8 +40,7 @@ public class HBUserService
 			genreDAO.save(genre);
 			return true;
 		}
-		catch(IllegalArgumentException e){
-			
+		catch(IllegalArgumentException e){			
 			return false;
 		}
 		
@@ -71,6 +72,21 @@ public class HBUserService
 	public List<HBUserAccount> findAllUserAccounts()
 	{
 		return userDAO.findAll();
+	}
+	
+	public Set<HBUserAccount> findAllOtherUserAccountsOfSameGenres(HBUserAccount user)
+	{
+		Set<HBUserAccount> commonAccounts = new HashSet<HBUserAccount>();
+		for(HBTopGenre genre : user.getTopGenres())
+		{
+			List<HBTopGenre> others = genreDAO.findOtherByGenre(genre.getGenre()).get();
+			for(HBTopGenre otherGenre : others)
+			{
+				if(otherGenre.getUser() != user)
+					commonAccounts.add(otherGenre.getUser());
+			}
+		}
+		return commonAccounts;
 	}
 	
 	public HBUserAccount findAccountById(int id)

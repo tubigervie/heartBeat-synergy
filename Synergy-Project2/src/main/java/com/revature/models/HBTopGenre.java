@@ -39,6 +39,11 @@ public class HBTopGenre
 		this.genre = genre;
 		this.user = user;
 	}
+	
+	public HBTopGenre(String genre) {
+		super();
+		this.genre = genre;
+	}
 
 	public HBTopGenre() {
 		super();

@@ -35,6 +35,13 @@ public class HBTopArtist
 		this.artistImage = artistImage;
 		this.user = user;
 	}
+	
+	public HBTopArtist(int id, String artistId, String artistName, String artistImage) {
+		super();
+		this.artistId = artistId;
+		this.artistName = artistName;
+		this.artistImage = artistImage;
+	}
 
 	public String getArtistName() {
 		return artistName;

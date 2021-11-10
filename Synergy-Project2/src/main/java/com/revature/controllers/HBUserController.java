@@ -1,9 +1,9 @@
 package com.revature.controllers;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,9 +38,19 @@ public class HBUserController
 		return genres;
 	}
 	
-	@PostMapping("/{id}/genre")
-	public ResponseEntity<HBUserAccount> addTopGenreToAccount(@RequestBody HBTopGenre genre)
+	@GetMapping("/{id}/potentials")
+	public Set<HBUserAccount> getPotentialMatches(@PathVariable("id") int id)
 	{
+		HBUserAccount account = userService.findAccountById(id);
+		return userService.findAllOtherUserAccountsOfSameGenres(account);
+	}
+	
+	@PostMapping("/{id}/genre")
+	public ResponseEntity<HBUserAccount> addTopGenreToAccount(@PathVariable("id") int id, @RequestBody HBTopGenre genre)
+	{
+		HBUserAccount account = userService.findAccountById(id);
+		if(account == null) return ResponseEntity.status(400).build();
+		genre.setUser(account);
 		boolean isAdded = userService.addGenre(genre);
 		if(!isAdded) {
 			return ResponseEntity.status(400).build();
@@ -48,7 +58,6 @@ public class HBUserController
 		else {
 			return ResponseEntity.status(201).build();
 		}
-		
 	}
 	
 	@PostMapping("/{id}/genres")
@@ -62,10 +71,17 @@ public class HBUserController
 		if(!clearedPreviousGenres) {
 			return ResponseEntity.status(400).build();
 		}
+		
+		for(HBTopGenre genre : genres)
+		{
+			genre.setUser(account);
+		}
+		
 		boolean addedAllArtists = userService.addHBUserTopGenres(genres);
 		if(!addedAllArtists) {
 			return ResponseEntity.status(400).build();
 		}
+		System.out.println("added genres");
 		return ResponseEntity.status(200).build();
 	}
 	
@@ -105,8 +121,11 @@ public class HBUserController
 	}
 	
 	@PostMapping("/{id}/artist")
-	public ResponseEntity<HBUserAccount> addTopArtistToAccount(@RequestBody HBTopArtist artist)
+	public ResponseEntity<HBUserAccount> addTopArtistToAccount(@PathVariable("id") int id, @RequestBody HBTopArtist artist)
 	{
+		HBUserAccount account = userService.findAccountById(id);
+		if(account == null) return ResponseEntity.status(400).build();
+		artist.setUser(account);
 		boolean isAdded = userService.addOrUpdateHBUserTopArtist(artist);
 		if(!isAdded)
 			return ResponseEntity.status(400).build();
@@ -120,6 +139,10 @@ public class HBUserController
 		if(account == null) return ResponseEntity.status(400).build();
 		boolean clearedPreviousArtists = userService.deleteHBUserTopArtists(account);
 		if(!clearedPreviousArtists) return ResponseEntity.status(400).build();
+		for(HBTopArtist artist : artists)
+		{
+			artist.setUser(account);
+		}
 		boolean addedAllArtists = userService.addHBUserTopArtists(artists);
 		if(!addedAllArtists) return ResponseEntity.status(400).build();
 		return ResponseEntity.status(200).build();
