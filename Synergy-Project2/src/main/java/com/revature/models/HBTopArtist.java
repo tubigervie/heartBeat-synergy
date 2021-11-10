@@ -2,6 +2,8 @@ package com.revature.models;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -13,6 +15,9 @@ import com.sun.istack.NotNull;
 public class HBTopArtist 
 {	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
+	
 	@NotNull
 	private String artistId;
 	
@@ -30,6 +35,7 @@ public class HBTopArtist
 	
 	public HBTopArtist(int id, String artistId, String artistName, String artistImage, HBUserAccount user) {
 		super();
+		this.id = id;
 		this.artistId = artistId;
 		this.artistName = artistName;
 		this.artistImage = artistImage;
@@ -37,6 +43,14 @@ public class HBTopArtist
 	}
 	
 	public HBTopArtist(int id, String artistId, String artistName, String artistImage) {
+		super();
+		this.id = id;
+		this.artistId = artistId;
+		this.artistName = artistName;
+		this.artistImage = artistImage;
+	}
+	
+	public HBTopArtist(String artistId, String artistName, String artistImage) {
 		super();
 		this.artistId = artistId;
 		this.artistName = artistName;
