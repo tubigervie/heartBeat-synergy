@@ -31,6 +31,9 @@ public class HBUserAccount
 	@NotNull
 	private String lastName;
 	
+	@NotNull
+	private int age;
+	
 	private String profileDescription;
 	
 	private String playlist;
@@ -44,43 +47,54 @@ public class HBUserAccount
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="user")
 	@JsonManagedReference
 	private List<HBTopGenre> topGenres;
+	
+	private FilterMatchType filterType;
+	
+	private FilterMatchType userType;
 
 	public HBUserAccount(int id, String username, String password, String firstName, String lastName,
-			String profileDescription, String playlist, String anthem, List<HBTopArtist> topArtists,
-			List<HBTopGenre> topGenres) {
+			int age, String profileDescription, String playlist, String anthem, List<HBTopArtist> topArtists,
+			List<HBTopGenre> topGenres, String filterType, String userType) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.age = age;
 		this.profileDescription = profileDescription;
 		this.playlist = playlist;
 		this.anthem = anthem;
 		this.topArtists = topArtists;
 		this.topGenres = topGenres;
+		this.filterType = FilterMatchType.valueOf(filterType);
+		this.userType = FilterMatchType.valueOf(userType);
 	}	
 
-	public HBUserAccount(String username, String password, String firstName, String lastName, String profileDescription,
-			String playlist, String anthem, List<HBTopArtist> topArtists, List<HBTopGenre> topGenres) {
+	public HBUserAccount(String username, String password, String firstName, String lastName, int age, String profileDescription,
+			String playlist, String anthem, List<HBTopArtist> topArtists, List<HBTopGenre> topGenres, String filterType, String userType) {
 		super();
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.age = age;
 		this.profileDescription = profileDescription;
 		this.playlist = playlist;
 		this.anthem = anthem;
 		this.topArtists = topArtists;
 		this.topGenres = topGenres;
+		this.filterType = FilterMatchType.valueOf(filterType);
+		this.userType = FilterMatchType.valueOf(userType);
 	}
 
-	public HBUserAccount(String username, String password, String firstName, String lastName) {
+	public HBUserAccount(String username, String password, String firstName, String lastName, int age) {
 		super();
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.age = age;
 	}
 
 	public HBUserAccount() {
@@ -127,6 +141,14 @@ public class HBUserAccount
 		this.lastName = lastName;
 	}
 
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
 	public String getProfileDescription() {
 		return profileDescription;
 	}
@@ -165,6 +187,24 @@ public class HBUserAccount
 
 	public void setTopGenres(List<HBTopGenre> topGenres) {
 		this.topGenres = topGenres;
+	}
+	
+	
+
+	public FilterMatchType getFilterType() {
+		return filterType;
+	}
+
+	public void setFilterType(FilterMatchType filterType) {
+		this.filterType = filterType;
+	}
+
+	public FilterMatchType getUserType() {
+		return userType;
+	}
+
+	public void setUserType(FilterMatchType userType) {
+		this.userType = userType;
 	}
 
 	@Override

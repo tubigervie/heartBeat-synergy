@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.revature.models.FilterMatchType;
 import com.revature.models.HBTopArtist;
 import com.revature.models.HBTopGenre;
 import com.revature.models.HBUserAccount;
@@ -111,7 +112,7 @@ public class HBUserService
 			List<HBTopGenre> others = genreDAO.findOtherByGenre(genre.getGenre()).get();
 			for(HBTopGenre otherGenre : others)
 			{
-				if(otherGenre.getUser() != user)
+				if(otherGenre.getUser() != user && (user.getFilterType() == FilterMatchType.EVERYONE || otherGenre.getUser().getUserType() == user.getFilterType()))
 					commonAccounts.add(otherGenre.getUser());
 			}
 		}
@@ -143,6 +144,10 @@ public class HBUserService
 	public boolean addOrUpdateHBUserAccount(HBUserAccount account)
 	{
 		try {
+			if(account.getFilterType() == null)
+				account.setFilterType(FilterMatchType.EVERYONE);
+			if(account.getUserType() == null)
+				account.setUserType(FilterMatchType.EVERYONE);
 			userDAO.save(account);
 			return true;
 		}
