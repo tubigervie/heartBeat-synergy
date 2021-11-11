@@ -1,5 +1,7 @@
 package com.revature.services;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -8,13 +10,17 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.revature.models.HBTopArtist;
 import com.revature.models.HBTopGenre;
 import com.revature.models.HBUserAccount;
+import com.revature.models.HBUserImage;
 import com.revature.repos.HBTopArtistDAO;
 import com.revature.repos.HBTopGenreDAO;
 import com.revature.repos.HBUserDAO;
+import com.revature.repos.HBUserImageDAO;
+import com.revature.utils.FileUploadUtil;
 
 @Service
 public class HBUserService 
@@ -28,11 +34,15 @@ public class HBUserService
 	@Autowired
 	private HBTopGenreDAO genreDAO;
 	
-	public HBUserService(HBUserDAO userDAO, HBTopArtistDAO artistDAO, HBTopGenreDAO genreDAO)
+	@Autowired
+	private HBUserImageDAO imageDAO;
+	
+	public HBUserService(HBUserDAO userDAO, HBTopArtistDAO artistDAO, HBTopGenreDAO genreDAO, HBUserImageDAO imageDAO)
 	{
 		this.userDAO = userDAO;
 		this.artistDAO = artistDAO;
 		this.genreDAO = genreDAO;
+		this.imageDAO = imageDAO;
 	}
 	
 	public boolean addGenre(HBTopGenre genre){
@@ -44,6 +54,25 @@ public class HBUserService
 			return false;
 		}
 		
+	}
+	
+	public HBUserImage storeImage(HBUserAccount user, MultipartFile file) throws IOException
+	{
+		HBUserImage image = new HBUserImage(file.getOriginalFilename(), file.getContentType(), user, FileUploadUtil.compressBytes(file.getBytes()));
+		return imageDAO.save(image);
+	}
+	
+	@Transactional
+	public List<HBUserImage> getImagesByUser(HBUserAccount user)
+	{
+		List<HBUserImage> compressedImages = imageDAO.findByUser(user);
+		List<HBUserImage> decompressedImages = new ArrayList<HBUserImage>();
+		for(HBUserImage compressedImage : compressedImages)
+		{
+			HBUserImage decompressedImage = new HBUserImage(compressedImage.getId(), compressedImage.getName(), compressedImage.getType(), user, FileUploadUtil.decompressBytes(compressedImage.getPicByte()));
+			decompressedImages.add(decompressedImage);
+		}
+		return decompressedImages;
 	}
 	
 	public boolean addHBUserTopGenres(List<HBTopGenre> genres)
@@ -68,7 +97,7 @@ public class HBUserService
 		return true;
 	}
 	
-	
+	@Transactional
 	public List<HBUserAccount> findAllUserAccounts()
 	{
 		return userDAO.findAll();

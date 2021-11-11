@@ -1,5 +1,6 @@
 package com.revature.controllers;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -12,11 +13,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.revature.models.HBTopArtist;
 import com.revature.models.HBTopGenre;
 import com.revature.models.HBUserAccount;
+import com.revature.models.HBUserImage;
 import com.revature.services.HBUserService;
 
 @CrossOrigin(origins="*", allowedHeaders="*")
@@ -165,6 +170,27 @@ public class HBUserController
 		if(!isAdded)
 			return ResponseEntity.status(400).build();
 		return ResponseEntity.status(201).build();
+	}
+	
+	@RequestMapping(value = "/{id}/photo" , method = RequestMethod.POST, consumes = { "multipart/form-data" })
+	public ResponseEntity<HBUserAccount> addPhotoData(@PathVariable("id") int id, @RequestPart("image") MultipartFile multipartFile)
+	{
+		HBUserAccount account = userService.findAccountById(id);
+		if(account == null) return ResponseEntity.status(400).build();
+		try {
+			userService.storeImage(account, multipartFile);
+		} catch (IOException e) {
+			return ResponseEntity.status(400).build();
+		}
+		return ResponseEntity.status(201).build();
+	}
+	
+	@GetMapping(value = "/{id}/photo" )
+	public List<HBUserImage> getAccountPhotos(@PathVariable("id") int id)
+	{
+		HBUserAccount account = userService.findAccountById(id);
+		if(account == null) return null;
+		return userService.getImagesByUser(account);
 	}
 	
 	@DeleteMapping("/{id}")
