@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -166,10 +167,10 @@ public class HBUserController
 	@PostMapping
 	public ResponseEntity<HBUserAccount> addAccount(@RequestBody HBUserAccount account)
 	{
-		boolean isAdded = userService.addOrUpdateHBUserAccount(account);
-		if(!isAdded)
+		HBUserAccount addedAccount = userService.addOrUpdateHBUserAccount(account);
+		if(addedAccount == null)
 			return ResponseEntity.status(400).build();
-		return ResponseEntity.status(201).build();
+		return new ResponseEntity<HBUserAccount>(addedAccount, HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(value = "/{id}/photo" , method = RequestMethod.POST, consumes = { "multipart/form-data" })

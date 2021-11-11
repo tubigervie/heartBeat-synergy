@@ -31,7 +31,6 @@ public class HBUserAccount
 	@NotNull
 	private String lastName;
 	
-	@NotNull
 	private int age;
 	
 	private String profileDescription;
@@ -88,13 +87,12 @@ public class HBUserAccount
 		this.userType = FilterMatchType.valueOf(userType);
 	}
 
-	public HBUserAccount(String username, String password, String firstName, String lastName, int age) {
+	public HBUserAccount(String username, String password, String firstName, String lastName) {
 		super();
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.age = age;
 	}
 
 	public HBUserAccount() {

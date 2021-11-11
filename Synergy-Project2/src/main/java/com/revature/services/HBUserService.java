@@ -141,19 +141,19 @@ public class HBUserService
 		}
 	}
 	
-	public boolean addOrUpdateHBUserAccount(HBUserAccount account)
+	public HBUserAccount addOrUpdateHBUserAccount(HBUserAccount account)
 	{
 		try {
 			if(account.getFilterType() == null)
 				account.setFilterType(FilterMatchType.EVERYONE);
 			if(account.getUserType() == null)
 				account.setUserType(FilterMatchType.EVERYONE);
-			userDAO.save(account);
-			return true;
+			HBUserAccount updatedAccount = userDAO.save(account);
+			return updatedAccount;
 		}
 		catch(IllegalArgumentException e)
 		{
-			return false;
+			return null;
 		}
 
 	}
