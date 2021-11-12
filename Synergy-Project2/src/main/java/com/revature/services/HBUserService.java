@@ -13,10 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.revature.models.FilterMatchType;
+import com.revature.models.HBMatch;
 import com.revature.models.HBTopArtist;
 import com.revature.models.HBTopGenre;
 import com.revature.models.HBUserAccount;
 import com.revature.models.HBUserImage;
+import com.revature.repos.HBMatchDAO;
 import com.revature.repos.HBTopArtistDAO;
 import com.revature.repos.HBTopGenreDAO;
 import com.revature.repos.HBUserDAO;
@@ -38,12 +40,16 @@ public class HBUserService
 	@Autowired
 	private HBUserImageDAO imageDAO;
 	
-	public HBUserService(HBUserDAO userDAO, HBTopArtistDAO artistDAO, HBTopGenreDAO genreDAO, HBUserImageDAO imageDAO)
+	@Autowired
+	private HBMatchDAO matchDAO;
+	
+	public HBUserService(HBUserDAO userDAO, HBTopArtistDAO artistDAO, HBTopGenreDAO genreDAO, HBUserImageDAO imageDAO, HBMatchDAO matchDAO)
 	{
 		this.userDAO = userDAO;
 		this.artistDAO = artistDAO;
 		this.genreDAO = genreDAO;
 		this.imageDAO = imageDAO;
+		this.matchDAO = matchDAO;
 	}
 	
 	public boolean addGenre(HBTopGenre genre){
@@ -56,6 +62,18 @@ public class HBUserService
 		}
 		
 	}
+	
+	public boolean addOrUpdateMatch(HBMatch match){
+		try {
+			matchDAO.save(match);
+			return true;
+		}
+		catch(IllegalArgumentException e){			
+			return false;
+		}
+	}
+	
+	
 	
 	public HBUserImage storeImage(HBUserAccount user, MultipartFile file) throws IOException
 	{
@@ -76,6 +94,12 @@ public class HBUserService
 		return decompressedImages;
 	}
 	
+	@Transactional
+	public void deleteUserImages(HBUserAccount user)
+	{
+		imageDAO.deleteByUser(user);
+	}
+	
 	public boolean addHBUserTopGenres(List<HBTopGenre> genres)
 	{
 		for(HBTopGenre genre : genres)
@@ -92,10 +116,9 @@ public class HBUserService
 	}
 	
 	@Transactional
-	public boolean deleteHBUserTopGenres(HBUserAccount user)
+	public void deleteHBUserTopGenres(HBUserAccount user)
 	{
 		genreDAO.deleteByUser(user);
-		return true;
 	}
 	
 	@Transactional
@@ -117,6 +140,46 @@ public class HBUserService
 			}
 		}
 		return commonAccounts;
+	}
+	
+	public List<HBUserAccount> findAllOtherMatchedAccounts(HBUserAccount user)
+	{
+		List<HBUserAccount> accounts = new ArrayList<HBUserAccount>();
+		List<HBMatch> matches = matchDAO.findByMatcherOrMatchee(user);
+		for(HBMatch match : matches)
+		{
+			if(match.isMatcheeResponse() == match.isMatcherResponse() && match.isMatcheeResponse())
+			{
+				if(match.getMatchee() != user)
+					accounts.add(match.getMatchee());
+				else
+					accounts.add(match.getMatcher());
+			}
+		}
+		return accounts;
+	}
+	
+	public List<HBUserAccount> findAllOtherPendingAccounts(HBUserAccount user)
+	{
+		List<HBUserAccount> accounts = new ArrayList<HBUserAccount>();
+		List<HBMatch> matches = matchDAO.findByMatcherOrMatchee(user);
+		for(HBMatch match : matches)
+		{
+			if(match.isMatcheeResponse() != match.isMatcherResponse() && !match.isMatcheeResponse())
+			{
+				if(match.getMatchee() != user)
+					accounts.add(match.getMatchee());
+				else
+					accounts.add(match.getMatcher());
+			}
+		}
+		return accounts;
+	}
+	
+	public HBMatch findExistingMatchByCombination(HBUserAccount user, HBUserAccount other)
+	{
+		HBMatch match = matchDAO.findByMatchCombination(user, other);
+		return match;
 	}
 	
 	public HBUserAccount findAccountById(int id)

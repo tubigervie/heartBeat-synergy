@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.revature.models.HBMatch;
 import com.revature.models.HBTopArtist;
 import com.revature.models.HBTopGenre;
 import com.revature.models.HBUserAccount;
@@ -73,11 +74,6 @@ public class HBUserController
 		if(account == null) {
 			return ResponseEntity.status(400).build();
 		}
-		boolean clearedPreviousGenres = userService.deleteHBUserTopGenres(account);
-		if(!clearedPreviousGenres) {
-			return ResponseEntity.status(400).build();
-		}
-		
 		for(HBTopGenre genre : genres)
 		{
 			genre.setUser(account);
@@ -98,10 +94,7 @@ public class HBUserController
 		if(account == null) {
 			return ResponseEntity.status(400).build();
 		}
-		boolean clearedPreviousGenres = userService.deleteHBUserTopGenres(account);
-		if(!clearedPreviousGenres) {
-			return ResponseEntity.status(400).build();
-		}
+		userService.deleteHBUserTopGenres(account);
 		return ResponseEntity.status(200).build();
 	}
 
@@ -178,11 +171,21 @@ public class HBUserController
 	{
 		HBUserAccount account = userService.findAccountById(id);
 		if(account == null) return ResponseEntity.status(400).build();
+		userService.deleteUserImages(account);
 		try {
 			userService.storeImage(account, multipartFile);
 		} catch (IOException e) {
 			return ResponseEntity.status(400).build();
 		}
+		return ResponseEntity.status(201).build();
+	}
+	
+	@DeleteMapping(value="/{id}/photo")
+	public ResponseEntity<HBUserAccount> deleteImages(@PathVariable("id") int id)
+	{
+		HBUserAccount account = userService.findAccountById(id);
+		if(account == null) return ResponseEntity.status(400).build();
+		userService.deleteUserImages(account);
 		return ResponseEntity.status(201).build();
 	}
 	
@@ -201,6 +204,41 @@ public class HBUserController
 		if(!isDeleted)
 			return ResponseEntity.status(400).build();
 		return ResponseEntity.status(201).build();
+	}
+	
+	@PostMapping("/{id}/match")
+	public ResponseEntity<HBMatch> addOrUpdateMatch(@PathVariable("id") int id, @RequestBody HBMatch match)
+	{
+		HBUserAccount account = userService.findAccountById(id);
+		if(account == null) return ResponseEntity.status(400).build();
+		boolean isAdded = userService.addOrUpdateMatch(match);
+		if(!isAdded)
+			return ResponseEntity.status(400).build();
+		return ResponseEntity.status(201).build();
+	}
+	
+	@GetMapping("/{id}/match/success")
+	public List<HBUserAccount> getSuccessfulMatches(@PathVariable("id") int id)
+	{
+		HBUserAccount account = userService.findAccountById(id);
+		return userService.findAllOtherMatchedAccounts(account);
+	}
+	
+	@GetMapping("/{id}/match")
+	public List<HBUserAccount> getPendingMatches(@PathVariable("id") int id)
+	{
+		HBUserAccount account = userService.findAccountById(id);
+		return userService.findAllOtherPendingAccounts(account);
+	}
+	
+	@GetMapping("/{id}/match/{oid}")
+	public ResponseEntity<HBMatch> getMatchByCombination(@PathVariable("id") int id, @PathVariable("oid") int oid)
+	{
+		HBUserAccount userAccount = userService.findAccountById(id);
+		HBUserAccount otherAccount = userService.findAccountById(oid);
+		HBMatch match = userService.findExistingMatchByCombination(userAccount, otherAccount);
+		if(match == null) return ResponseEntity.status(400).build();
+		return new ResponseEntity<HBMatch>(match, HttpStatus.OK);
 	}
 	
 }

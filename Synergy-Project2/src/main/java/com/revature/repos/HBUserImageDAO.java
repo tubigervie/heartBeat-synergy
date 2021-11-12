@@ -12,4 +12,6 @@ import com.revature.models.HBUserImage;
 public interface HBUserImageDAO extends JpaRepository<HBUserImage, Integer>
 {
 	List<HBUserImage> findByUser(HBUserAccount user);
+	
+	List<HBUserImage> deleteByUser(HBUserAccount user);
 }
