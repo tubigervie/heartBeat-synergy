@@ -74,6 +74,7 @@ public class HBUserController
 		if(account == null) {
 			return ResponseEntity.status(400).build();
 		}
+		userService.deleteHBUserTopGenres(account);
 		for(HBTopGenre genre : genres)
 		{
 			genre.setUser(account);
