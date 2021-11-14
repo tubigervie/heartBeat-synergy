@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.revature.models.HBMatch;
 import com.revature.models.HBTopArtist;
 import com.revature.models.HBTopGenre;
 import com.revature.models.HBUserAccount;
@@ -37,9 +39,10 @@ class SynergyProject2ApplicationTests {
 	//User tests
 	
 	private static Logger log = LoggerFactory.getLogger(SynergyProject2ApplicationTests.class);
-	HBUserAccount userAccount = new HBUserAccount(0, "hbUserTester", "testpass", "testname", "testlast", 0, "testDesc", "testList", "testAnthem", null, null, "EVERYONE", "EVERYONE");
+	HBUserAccount userAccount = new HBUserAccount("hbUserTester", "testpass", "testname", "testlast", 0, "testDesc", "testList", "testAnthem", null, null, "EVERYONE", "EVERYONE");
 	HBTopArtist topArtist = new HBTopArtist(0, "testArtistId", "testArtistName", "test", null);
 	HBTopGenre topGenre = new HBTopGenre("test");
+	HBMatch match = new HBMatch(userAccount, userAccount, true, true);
 	
 	@BeforeAll
 	public void AddAccount(){
@@ -56,16 +59,13 @@ class SynergyProject2ApplicationTests {
 	@Test
 	public void getAccountById() {
 		HBUserAccount test = userService.findAccountById(userAccount.getId());
-		log.warn(test.toString());
-		log.warn(userAccount.toString());
 		assertEquals(test, userAccount);
 	}
 	
 	@Test 
 	public void getAccountByUsername() {
 		HBUserAccount test = userService.findAccountByUsername(userAccount.getUsername());
-		log.warn(test.toString());
-		log.warn(userAccount.toString());
+		
 		assertEquals(test, userAccount);
 	}
 	
@@ -78,10 +78,22 @@ class SynergyProject2ApplicationTests {
 	}
 	
 	@Test
+	public void addHBTopArtistTest() {
+		List<HBTopArtist> list = new ArrayList<HBTopArtist>();
+		list.add(topArtist);
+		assertTrue(userService.addHBUserTopArtists(list));
+	}
+	
+	@Test
+	public void deleteHBTopArtistTest() {
+		assertTrue(userService.deleteHBUserTopArtists(userAccount));	
+	}
+	
+	@Test
 	public void findTopArtistByUserIdTest(){
 		List<HBTopArtist> list = new ArrayList<HBTopArtist>();
 		list = userService.findTopArtistsByUserID(userAccount.getId());
-		assertEquals(list, 0);
+		assertEquals(list.size(), 0);
 	}
 	
 	//Genre tests
@@ -90,7 +102,25 @@ class SynergyProject2ApplicationTests {
 		assertTrue(userService.addGenre(topGenre));
 	}
 	
-
+	@Test
+	public void addHBTopGenres() {
+		List<HBTopGenre> list = new ArrayList<HBTopGenre>();
+		list.add(topGenre);
+		assertTrue(userService.addHBUserTopGenres(list));
+	}
+	
+	@Test
+	public void findTopGenresByUserIdTest() {
+		List<HBTopGenre> list = new ArrayList<HBTopGenre>();
+		list = userService.findTopGenresByUserId(userAccount.getId());
+		assertEquals(list.size(), 0);
+	}
+	
+	//Match tests
+	@Test
+	public void addMatch() {
+	 assertTrue(userService.addOrUpdateMatch(match));
+	}
 	
 	@AfterAll
 	public void DeleteAccount() {
