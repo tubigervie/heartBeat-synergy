@@ -78,6 +78,10 @@ public class HBUserController
 		for(HBTopGenre genre : genres)
 		{
 			genre.setUser(account);
+			boolean isAdded = userService.addGenre(genre);
+			if(!isAdded) {
+				return ResponseEntity.status(400).build();
+			}
 		}
 		System.out.println("added genres");
 		return ResponseEntity.status(200).build();
