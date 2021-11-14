@@ -204,6 +204,81 @@ public class HBUserAccount
 	public void setUserType(FilterMatchType userType) {
 		this.userType = userType;
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + age;
+		result = prime * result + ((anthem == null) ? 0 : anthem.hashCode());
+		result = prime * result + ((filterType == null) ? 0 : filterType.hashCode());
+		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+		result = prime * result + id;
+		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((playlist == null) ? 0 : playlist.hashCode());
+		result = prime * result + ((profileDescription == null) ? 0 : profileDescription.hashCode());
+		result = prime * result + ((topArtists == null) ? 0 : topArtists.hashCode());
+		result = prime * result + ((topGenres == null) ? 0 : topGenres.hashCode());
+		result = prime * result + ((userType == null) ? 0 : userType.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HBUserAccount other = (HBUserAccount) obj;
+		if (age != other.age)
+			return false;
+		if (anthem == null) {
+			if (other.anthem != null)
+				return false;
+		} else if (!anthem.equals(other.anthem))
+			return false;
+		if (filterType != other.filterType)
+			return false;
+		if (firstName == null) {
+			if (other.firstName != null)
+				return false;
+		} else if (!firstName.equals(other.firstName))
+			return false;
+		if (id != other.id)
+			return false;
+		if (lastName == null) {
+			if (other.lastName != null)
+				return false;
+		} else if (!lastName.equals(other.lastName))
+			return false;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
+			return false;
+		if (playlist == null) {
+			if (other.playlist != null)
+				return false;
+		} else if (!playlist.equals(other.playlist))
+			return false;
+		if (profileDescription == null) {
+			if (other.profileDescription != null)
+				return false;
+		} else if (!profileDescription.equals(other.profileDescription))
+			return false;
+		if (userType != other.userType)
+			return false;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
+		return true;
+	}
 
 	@Override
 	public String toString() {
@@ -211,5 +286,7 @@ public class HBUserAccount
 				+ firstName + ", lastName=" + lastName + ", profileDescription=" + profileDescription + ", playlist="
 				+ playlist + ", anthem=" + anthem + ", topArtists=" + topArtists + ", topGenres=" + topGenres + "]";
 	}
+	
+	
 	
 }
