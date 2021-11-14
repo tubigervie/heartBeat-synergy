@@ -121,7 +121,7 @@ class SynergyProject2ApplicationTests {
 	public void addMatch() {
 	 assertTrue(userService.addOrUpdateMatch(match));
 	}
-	
+
 	@AfterAll
 	public void DeleteAccount() {
 		userService.deleteHBUserAccount(userAccount.getId());
