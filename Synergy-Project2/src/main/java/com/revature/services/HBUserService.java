@@ -196,7 +196,7 @@ public class HBUserService
 	public HBUserAccount findAccountByUsername(String username)
 	{
 		try {
-			return userDAO.findAccountByUsername(username).get();
+			return userDAO.findByUsernameIgnoreCase(username);
 		}
 		catch(NoSuchElementException e)
 		{
