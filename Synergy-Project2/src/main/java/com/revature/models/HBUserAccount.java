@@ -2,6 +2,7 @@ package com.revature.models;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -19,6 +20,7 @@ public class HBUserAccount
 	@GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private int id;
 	
+	@Column(unique=true)
 	@NotNull
 	private String username;
 	

@@ -18,4 +18,7 @@ public interface HBTopGenreDAO extends JpaRepository<HBTopGenre, Integer>{
 	
 	@Query("FROM HBTopGenre g where g.genre LIKE :genre")
 	Optional<List<HBTopGenre>> findOtherByGenre(@Param("genre") String genre);
+	
+	@Query("FROM HBTopGenre g where g.genre LIKE :genre AND g.user =:user")
+	Optional<HBTopGenre> findGenreFromUser(@Param("genre") String genre, @Param("user") HBUserAccount user);
 }

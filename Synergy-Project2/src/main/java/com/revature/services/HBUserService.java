@@ -100,6 +100,20 @@ public class HBUserService
 		imageDAO.deleteByUser(user);
 	}
 	
+	public boolean findGenreFromUser(HBUserAccount user, HBTopGenre genre)
+	{
+		try {
+			HBTopGenre found = genreDAO.findGenreFromUser(genre.getGenre(), user).get();
+			if(found != null) return true;
+		}
+		catch(NoSuchElementException e)
+		{
+			return false;
+		}
+		return false;
+
+	}
+	
 	public boolean addHBUserTopGenres(List<HBTopGenre> genres)
 	{
 		for(HBTopGenre genre : genres)
@@ -136,7 +150,10 @@ public class HBUserService
 			for(HBTopGenre otherGenre : others)
 			{
 				if(otherGenre.getUser() != user && (user.getFilterType() == FilterMatchType.EVERYONE || otherGenre.getUser().getUserType() == user.getFilterType()))
-					commonAccounts.add(otherGenre.getUser());
+				{
+					if(findExistingMatchByCombination(user, otherGenre.getUser()) == null)
+						commonAccounts.add(otherGenre.getUser());	
+				}
 			}
 		}
 		return commonAccounts;
