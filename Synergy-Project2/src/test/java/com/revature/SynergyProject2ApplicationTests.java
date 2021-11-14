@@ -132,26 +132,6 @@ class SynergyProject2ApplicationTests {
 		assertEquals(list.size(), 0);
 	}
 	
-	//Match tests
-
-	@Test
-	public void addGenreTest() {
-		assertTrue(userService.addGenre(topGenre));
-	}
-	
-	@Test
-	public void addHBTopGenres() {
-		List<HBTopGenre> list = new ArrayList<HBTopGenre>();
-		list.add(topGenre);
-		assertTrue(userService.addHBUserTopGenres(list));
-	}
-	
-	@Test
-	public void findTopGenresByUserIdTest() {
-		List<HBTopGenre> list = new ArrayList<HBTopGenre>();
-		list = userService.findTopGenresByUserId(userAccount.getId());
-		assertEquals(list.size(), 0);
-	}
 	
 	//Match tests
 	@Test
