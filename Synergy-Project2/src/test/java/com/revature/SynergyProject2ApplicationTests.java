@@ -1,8 +1,6 @@
 package com.revature;
 
-<<<<<<< Updated upstream
 import org.junit.jupiter.api.Test;
-=======
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -15,10 +13,13 @@ import org.hibernate.Hibernate;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 import com.revature.controllers.HBLoginController;
 import com.revature.models.HBLoginDTO;
@@ -29,24 +30,25 @@ import com.revature.models.HBUserAccount;
 import com.revature.repos.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
->>>>>>> Stashed changes
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.revature.services.HBUserService;
+
+
+@TestInstance(Lifecycle.PER_CLASS)
 @SpringBootTest
 class SynergyProject2ApplicationTests {
-<<<<<<< Updated upstream
 
-=======
 	
 	
 	@Autowired
 	private HBUserService userService;
-	
 	@Autowired
 	private HBLoginController loginController;
 	
+
 	//User tests
 	
 	private static Logger log = LoggerFactory.getLogger(SynergyProject2ApplicationTests.class);
@@ -55,6 +57,8 @@ class SynergyProject2ApplicationTests {
 	HBTopGenre topGenre = new HBTopGenre("test");
 	HBMatch match = new HBMatch(userAccount, userAccount, true, true);
 	HBLoginDTO logindto = new HBLoginDTO("hbUserTester", "testpass");
+
+
 	
 	@BeforeAll
 	public void AddAccount(){
@@ -129,9 +133,30 @@ class SynergyProject2ApplicationTests {
 	}
 	
 	//Match tests
->>>>>>> Stashed changes
+
 	@Test
-	void contextLoads() {
+	public void addGenreTest() {
+		assertTrue(userService.addGenre(topGenre));
+	}
+	
+	@Test
+	public void addHBTopGenres() {
+		List<HBTopGenre> list = new ArrayList<HBTopGenre>();
+		list.add(topGenre);
+		assertTrue(userService.addHBUserTopGenres(list));
+	}
+	
+	@Test
+	public void findTopGenresByUserIdTest() {
+		List<HBTopGenre> list = new ArrayList<HBTopGenre>();
+		list = userService.findTopGenresByUserId(userAccount.getId());
+		assertEquals(list.size(), 0);
+	}
+	
+	//Match tests
+	@Test
+	public void addMatch() {
+	 assertTrue(userService.addOrUpdateMatch(match));
 	}
 	
 	@Test
@@ -147,8 +172,6 @@ class SynergyProject2ApplicationTests {
 	}
 	
 
-<<<<<<< Updated upstream
-=======
 	@Test
 	public void findAllOtherPendingAccountsTest() {
 		assertEquals(userService.findAllOtherMatchedAccounts(userAccount).size(), 1);
@@ -160,10 +183,11 @@ class SynergyProject2ApplicationTests {
 		assertEquals(loginController.loginToAccount(logindto),userAccount);
 	}
 	
+
+
 	@AfterAll
 	public void DeleteAccount() {
-		System.out.println(userAccount.getId());
 		userService.deleteHBUserAccount(userAccount.getId());
 	}
->>>>>>> Stashed changes
+
 }

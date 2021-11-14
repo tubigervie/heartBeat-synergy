@@ -5,6 +5,7 @@ public class HBLoginDTO
 {
 	public String username;
 	public String password;
+
 	
 	
 	
@@ -22,5 +23,6 @@ public class HBLoginDTO
 	
 	
 }
+
 
 
