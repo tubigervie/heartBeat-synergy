@@ -79,11 +79,6 @@ public class HBUserController
 		{
 			genre.setUser(account);
 		}
-		
-		boolean addedAllArtists = userService.addHBUserTopGenres(genres);
-		if(!addedAllArtists) {
-			return ResponseEntity.status(400).build();
-		}
 		System.out.println("added genres");
 		return ResponseEntity.status(200).build();
 	}
@@ -125,6 +120,8 @@ public class HBUserController
 	{
 		HBUserAccount account = userService.findAccountById(id);
 		if(account == null) return ResponseEntity.status(400).build();
+		boolean clearedPreviousArtists = userService.deleteHBUserTopArtists(account);
+		if(!clearedPreviousArtists) return ResponseEntity.status(400).build();
 		artist.setUser(account);
 		boolean isAdded = userService.addOrUpdateHBUserTopArtist(artist);
 		if(!isAdded)
