@@ -10,6 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 
@@ -41,11 +45,13 @@ public class HBUserAccount
 	
 	private String anthem;
 	
-	@OneToMany(fetch=FetchType.LAZY, mappedBy="user")
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="user")
+	@Fetch(value = FetchMode.SUBSELECT)
 	@JsonManagedReference
 	private List<HBTopArtist> topArtists;
 	
-	@OneToMany(fetch=FetchType.LAZY, mappedBy="user")
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="user")
+	@Fetch(value = FetchMode.SUBSELECT)
 	@JsonManagedReference
 	private List<HBTopGenre> topGenres;
 	

@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.revature.models.FilterMatchType;
 import com.revature.models.HBMatch;
+import com.revature.models.HBMatch.MatchResponse;
 import com.revature.models.HBTopArtist;
 import com.revature.models.HBTopGenre;
 import com.revature.models.HBUserAccount;
@@ -64,7 +65,7 @@ public class HBUserService
 	}
 	
 	public boolean addOrUpdateMatch(HBMatch match){
-		try {
+		try {;
 			matchDAO.save(match);
 			return true;
 		}
@@ -149,10 +150,11 @@ public class HBUserService
 			List<HBTopGenre> others = genreDAO.findOtherByGenre(genre.getGenre()).get();
 			for(HBTopGenre otherGenre : others)
 			{
-				if(otherGenre.getUser() != user && (user.getFilterType() == FilterMatchType.EVERYONE || otherGenre.getUser().getUserType() == user.getFilterType()))
+				if(otherGenre.getUser() != user)
 				{
-					if(findExistingMatchByCombination(user, otherGenre.getUser()) == null)
-						commonAccounts.add(otherGenre.getUser());	
+					HBMatch match = findExistingMatchByCombination(user.getId(), otherGenre.getUser().getId());
+					if((match == null && (user.getFilterType() == FilterMatchType.EVERYONE || otherGenre.getUser().getUserType() == user.getFilterType())) || (match != null && match.getMatchee() == otherGenre.getUser().getId() && match.getMatcheeResponse() == MatchResponse.PENDING))
+						commonAccounts.add(otherGenre.getUser());
 				}
 			}
 		}
@@ -162,15 +164,15 @@ public class HBUserService
 	public List<HBUserAccount> findAllOtherMatchedAccounts(HBUserAccount user)
 	{
 		List<HBUserAccount> accounts = new ArrayList<HBUserAccount>();
-		List<HBMatch> matches = matchDAO.findByMatcherOrMatchee(user);
+		List<HBMatch> matches = matchDAO.findByMatcherOrMatchee(user.getId());
 		for(HBMatch match : matches)
 		{
-			if(match.isMatcheeResponse() == match.isMatcherResponse() && match.isMatcheeResponse())
+			if(match.getMatcheeResponse() == match.getMatcherResponse() && match.getMatcheeResponse() == MatchResponse.ACCEPT)
 			{
-				if(match.getMatchee() != user)
-					accounts.add(match.getMatchee());
+				if(match.getMatchee() != user.getId())
+					accounts.add(userDAO.findById(match.getMatchee()).get());
 				else
-					accounts.add(match.getMatcher());
+					accounts.add(userDAO.findById(match.getMatcher()).get());
 			}
 		}
 		return accounts;
@@ -179,21 +181,21 @@ public class HBUserService
 	public List<HBUserAccount> findAllOtherPendingAccounts(HBUserAccount user)
 	{
 		List<HBUserAccount> accounts = new ArrayList<HBUserAccount>();
-		List<HBMatch> matches = matchDAO.findByMatcherOrMatchee(user);
+		List<HBMatch> matches = matchDAO.findByMatcherOrMatchee(user.getId());
 		for(HBMatch match : matches)
 		{
-			if(match.isMatcheeResponse() != match.isMatcherResponse() && !match.isMatcheeResponse())
+			if(match.getMatcheeResponse() == MatchResponse.PENDING || match.getMatcherResponse() == MatchResponse.PENDING)
 			{
-				if(match.getMatchee() != user)
-					accounts.add(match.getMatchee());
+				if(match.getMatchee() != user.getId())
+					accounts.add(userDAO.findById(match.getMatchee()).get());
 				else
-					accounts.add(match.getMatcher());
+					accounts.add(userDAO.findById(match.getMatcher()).get());
 			}
 		}
 		return accounts;
 	}
 	
-	public HBMatch findExistingMatchByCombination(HBUserAccount user, HBUserAccount other)
+	public HBMatch findExistingMatchByCombination(int user, int other)
 	{
 		HBMatch match = matchDAO.findByMatchCombination(user, other);
 		return match;

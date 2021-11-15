@@ -1,54 +1,50 @@
 package com.revature.models;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.istack.NotNull;
 
 @Entity
 public class HBMatch {
+	public enum MatchResponse {ACCEPT, DECLINE, PENDING};
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn
-	@JsonBackReference(value="matcher-ref")
 	@NotNull
-	private HBUserAccount matcher;
+	private int matcherId;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn
-	@JsonBackReference(value="matchee-ref")
 	@NotNull
-	private HBUserAccount matchee;
+	private int matcheeId;
 	
-	private boolean matcherResponse;
+	@Enumerated(EnumType.STRING)
+	private MatchResponse matcheeResponse;
 	
-	private boolean matcheeResponse;
+	@Enumerated(EnumType.STRING)
+	private MatchResponse matcherResponse;
 
-	public HBMatch(int id, HBUserAccount matcher, HBUserAccount matchee, boolean matcherResponse,
-			boolean matcheeResponse) {
+	public HBMatch(int id, int matcher, int matchee, String matcherResponse,
+			String matcheeResponse) {
 		super();
 		this.id = id;
-		this.matcher = matcher;
-		this.matchee = matchee;
-		this.matcherResponse = matcherResponse;
-		this.matcheeResponse = matcheeResponse;
+		this.matcherId = matcher;
+		this.matcheeId = matchee;
+		this.matcherResponse = MatchResponse.valueOf(matcherResponse);
+		this.matcheeResponse = MatchResponse.valueOf(matcheeResponse);
 	}
 
-	public HBMatch(HBUserAccount matcher, HBUserAccount matchee, boolean matcherResponse, boolean matcheeResponse) {
+	public HBMatch(int matcher, int matchee, String matcherResponse, String matcheeResponse) {
 		super();
-		this.matcher = matcher;
-		this.matchee = matchee;
-		this.matcherResponse = matcherResponse;
-		this.matcheeResponse = matcheeResponse;
+		this.matcherId = matcher;
+		this.matcheeId = matchee;
+		this.matcherResponse = MatchResponse.valueOf(matcherResponse);
+		this.matcheeResponse = MatchResponse.valueOf(matcheeResponse);
 	}
 	
 	public HBMatch()
@@ -64,35 +60,35 @@ public class HBMatch {
 		this.id = id;
 	}
 
-	public HBUserAccount getMatcher() {
-		return matcher;
+	public int getMatcher() {
+		return matcherId;
 	}
 
-	public void setMatcher(HBUserAccount matcher) {
-		this.matcher = matcher;
+	public void setMatcher(int matcher) {
+		this.matcherId = matcher;
 	}
 
-	public HBUserAccount getMatchee() {
-		return matchee;
+	public int getMatchee() {
+		return matcheeId;
 	}
 
-	public void setMatchee(HBUserAccount matchee) {
-		this.matchee = matchee;
+	public void setMatchee(int matchee) {
+		this.matcheeId = matchee;
 	}
 
-	public boolean isMatcherResponse() {
+	public MatchResponse getMatcherResponse() {
 		return matcherResponse;
 	}
 
-	public void setMatcherResponse(boolean matcherResponse) {
+	public void setMatcherResponse(MatchResponse matcherResponse) {
 		this.matcherResponse = matcherResponse;
 	}
 
-	public boolean isMatcheeResponse() {
+	public MatchResponse getMatcheeResponse() {
 		return matcheeResponse;
 	}
 
-	public void setMatcheeResponse(boolean matcheeResponse) {
+	public void setMatcheeResponse(MatchResponse matcheeResponse) {
 		this.matcheeResponse = matcheeResponse;
 	}
 	
