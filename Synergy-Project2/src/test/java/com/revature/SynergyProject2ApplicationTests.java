@@ -55,7 +55,7 @@ class SynergyProject2ApplicationTests {
 	HBUserAccount userAccount = new HBUserAccount("hbUserTester", "testpass", "testname", "testlast", 0, "testDesc", "testList", "testAnthem", null, null, "EVERYONE", "EVERYONE");
 	HBTopArtist topArtist = new HBTopArtist(0, "testArtistId", "testArtistName", "test", null);
 	HBTopGenre topGenre = new HBTopGenre("test");
-	HBMatch match = new HBMatch(userAccount, userAccount, true, true);
+	HBMatch match = new HBMatch(userAccount.getId(), userAccount.getId(), "ACCEPT", "ACCEPT");
 	HBLoginDTO logindto = new HBLoginDTO("hbUserTester", "testpass");
 
 
@@ -141,8 +141,8 @@ class SynergyProject2ApplicationTests {
 	
 	@Test
 	public void findMatchByUsers() {
-		userService.findExistingMatchByCombination(userAccount, userAccount);
-		assertFalse(userService.findExistingMatchByCombination(userAccount, userAccount)==null);
+		userService.findExistingMatchByCombination(userAccount.getId(), userAccount.getId());
+		assertFalse(userService.findExistingMatchByCombination(userAccount.getId(), userAccount.getId())==null);
 	}
 	
 	

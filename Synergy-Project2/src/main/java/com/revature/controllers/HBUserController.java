@@ -236,9 +236,7 @@ public class HBUserController
 	@GetMapping("/{id}/match/{oid}")
 	public ResponseEntity<HBMatch> getMatchByCombination(@PathVariable("id") int id, @PathVariable("oid") int oid)
 	{
-		HBUserAccount userAccount = userService.findAccountById(id);
-		HBUserAccount otherAccount = userService.findAccountById(oid);
-		HBMatch match = userService.findExistingMatchByCombination(userAccount, otherAccount);
+		HBMatch match = userService.findExistingMatchByCombination(id, oid);
 		if(match == null) return ResponseEntity.status(400).build();
 		return new ResponseEntity<HBMatch>(match, HttpStatus.OK);
 	}

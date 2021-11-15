@@ -13,9 +13,9 @@ import com.revature.models.HBUserAccount;
 @Repository
 public interface HBMatchDAO extends JpaRepository<HBMatch, Integer> 
 {
-	@Query("FROM HBMatch m where m.matcher = :user OR m.matchee = :user")
-	List<HBMatch> findByMatcherOrMatchee(@Param("user") HBUserAccount user);
+	@Query("FROM HBMatch m where m.matcherId = :user OR m.matcheeId = :user")
+	List<HBMatch> findByMatcherOrMatchee(@Param("user") int userId);
 	
-	@Query("FROM HBMatch m where (m.matcher = :user AND m.matchee = :other) OR (m.matchee = :user AND m.matcher = :other)")
-	HBMatch findByMatchCombination(@Param("user") HBUserAccount user, @Param("other") HBUserAccount other);
+	@Query("FROM HBMatch m where (m.matcherId = :user AND m.matcheeId = :other) OR (m.matcheeId = :user AND m.matcherId = :other)")
+	HBMatch findByMatchCombination(@Param("user") int userId, @Param("other") int otherId);
 }
