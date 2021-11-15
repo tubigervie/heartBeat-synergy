@@ -41,7 +41,7 @@ import com.revature.services.HBUserService;
 @SpringBootTest
 class SynergyProject2ApplicationTests {
 
-	
+	//17 out of 22 methods have tests
 	
 	@Autowired
 	private HBUserService userService;
@@ -52,7 +52,7 @@ class SynergyProject2ApplicationTests {
 	//User tests
 	
 	private static Logger log = LoggerFactory.getLogger(SynergyProject2ApplicationTests.class);
-	HBUserAccount userAccount = new HBUserAccount("hbUserTester", "testpass", "testname", "testlast", 0, "testDesc", "testList", "testAnthem", null, null, "EVERYONE", "EVERYONE");
+	HBUserAccount userAccount = new HBUserAccount("hbUserTester1", "testpass", "testname", "testlast", 0, "testDesc", "testList", "testAnthem", null, null, "EVERYONE", "EVERYONE");
 	HBTopArtist topArtist = new HBTopArtist(0, "testArtistId", "testArtistName", "test", null);
 	HBTopGenre topGenre = new HBTopGenre("test");
 	HBMatch match = new HBMatch(userAccount.getId(), userAccount.getId(), "ACCEPT", "ACCEPT");
@@ -60,29 +60,35 @@ class SynergyProject2ApplicationTests {
 
 
 	
-	@BeforeAll
+	@Test
 	public void AddAccount(){
 		HBUserAccount test = userService.addOrUpdateHBUserAccount(userAccount);
 		assertEquals(test,userAccount);
+		log.info("addAccount testing");
+		log.info("User Id: " + String.valueOf(userAccount.getId()));
+
 	}
 	
 	@Test
 	public void getAllAccounts() {
 		List<HBUserAccount> list = userService.findAllUserAccounts();
 		assertNotEquals(list, 0);
+		log.info("getAllAccounts testing");
+		log.info("List size: " + String.valueOf(list.size()));
 	}
 	
 	@Test
 	public void getAccountById() {
 		HBUserAccount test = userService.findAccountById(userAccount.getId());
 		assertEquals(test, userAccount);
+		log.info("getAccountById testing");
 	}
 	
 	@Test 
 	public void getAccountByUsername() {
 		HBUserAccount test = userService.findAccountByUsername(userAccount.getUsername());
-		
 		assertEquals(test, userAccount);
+		log.info("getAccountByUsername testing");
 	}
 	
 	//Artist tests
@@ -91,6 +97,7 @@ class SynergyProject2ApplicationTests {
 		List<HBTopArtist> list = new ArrayList<HBTopArtist>();
 		list.add(topArtist);
 		assertTrue(userService.addHBUserTopArtists(list));
+		log.info("addTopArtist testing");
 	}
 	
 	@Test
@@ -98,11 +105,14 @@ class SynergyProject2ApplicationTests {
 		List<HBTopArtist> list = new ArrayList<HBTopArtist>();
 		list.add(topArtist);
 		assertTrue(userService.addHBUserTopArtists(list));
+		log.info("userService testing");
+		log.info("List: " +list.toString());
 	}
 	
 	@Test
 	public void deleteHBTopArtistTest() {
 		assertTrue(userService.deleteHBUserTopArtists(userAccount));	
+		log.info("userService testing");
 	}
 	
 	@Test
@@ -110,12 +120,14 @@ class SynergyProject2ApplicationTests {
 		List<HBTopArtist> list = new ArrayList<HBTopArtist>();
 		list = userService.findTopArtistsByUserID(userAccount.getId());
 		assertEquals(list.size(), 0);
+		log.info("findTopArtist testing");
 	}
 	
 	//Genre tests
 	@Test
 	public void addGenreTest() {
 		assertTrue(userService.addGenre(topGenre));
+		log.info("addGenre testing");
 	}
 	
 	@Test
@@ -123,6 +135,8 @@ class SynergyProject2ApplicationTests {
 		List<HBTopGenre> list = new ArrayList<HBTopGenre>();
 		list.add(topGenre);
 		assertTrue(userService.addHBUserTopGenres(list));
+		log.info("addHBTopGenre testing");
+		log.info("Genre list: " +list.toString());
 	}
 	
 	@Test
@@ -130,6 +144,7 @@ class SynergyProject2ApplicationTests {
 		List<HBTopGenre> list = new ArrayList<HBTopGenre>();
 		list = userService.findTopGenresByUserId(userAccount.getId());
 		assertEquals(list.size(), 0);
+		log.info("findTopGenresByUser testing");
 	}
 	
 	
@@ -137,6 +152,8 @@ class SynergyProject2ApplicationTests {
 	@Test
 	public void addMatch() {
 	 assertTrue(userService.addOrUpdateMatch(match));
+	 log.info("addMatch testing");
+	 log.info("Match Id: " + String.valueOf(match.getId()));
 	}
 	
 	@Test
@@ -149,18 +166,21 @@ class SynergyProject2ApplicationTests {
 	@Test
 	public void findAllOtherMatchedAccountsTest() {
 		assertEquals(userService.findAllOtherMatchedAccounts(userAccount).size(),1);
+		log.info("findAllOtherMatchedAccount testing");
 	}
 	
 
 	@Test
 	public void findAllOtherPendingAccountsTest() {
 		assertEquals(userService.findAllOtherMatchedAccounts(userAccount).size(), 1);
+		log.info("findAllOtherPendingAccount testing");
 	}
 	
 	//Login tests
 	@Test
 	public void loginTest() {
 		assertEquals(loginController.loginToAccount(logindto),userAccount);
+		log.info("login testing");
 	}
 	
 
