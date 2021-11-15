@@ -65,7 +65,7 @@ class SynergyProject2ApplicationTests {
 		HBUserAccount test = userService.addOrUpdateHBUserAccount(userAccount);
 		assertEquals(test,userAccount);
 		log.info("addAccount testing");
-		log.info(String.valueOf(userAccount.getId()));
+		log.info("User Id: " + String.valueOf(userAccount.getId()));
 
 	}
 	
@@ -74,7 +74,7 @@ class SynergyProject2ApplicationTests {
 		List<HBUserAccount> list = userService.findAllUserAccounts();
 		assertNotEquals(list, 0);
 		log.info("getAllAccounts testing");
-		log.info(String.valueOf(list.size()));
+		log.info("List size: " + String.valueOf(list.size()));
 	}
 	
 	@Test
@@ -106,7 +106,7 @@ class SynergyProject2ApplicationTests {
 		list.add(topArtist);
 		assertTrue(userService.addHBUserTopArtists(list));
 		log.info("userService testing");
-		log.info(list.toString());
+		log.info("List: " +list.toString());
 	}
 	
 	@Test
@@ -136,7 +136,7 @@ class SynergyProject2ApplicationTests {
 		list.add(topGenre);
 		assertTrue(userService.addHBUserTopGenres(list));
 		log.info("addHBTopGenre testing");
-		log.info(list.toString());
+		log.info("Genre list: " +list.toString());
 	}
 	
 	@Test
@@ -153,7 +153,7 @@ class SynergyProject2ApplicationTests {
 	public void addMatch() {
 	 assertTrue(userService.addOrUpdateMatch(match));
 	 log.info("addMatch testing");
-	 log.info(String.valueOf(match.getId()));
+	 log.info("Match Id: " + String.valueOf(match.getId()));
 	}
 	
 	@Test
