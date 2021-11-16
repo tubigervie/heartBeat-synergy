@@ -26,9 +26,15 @@ import com.revature.repos.HBUserDAO;
 import com.revature.repos.HBUserImageDAO;
 import com.revature.utils.FileUploadUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class HBUserService 
 {
+
+	public static Logger myLogger = LoggerFactory.getLogger("myLogger");
+
 	@Autowired
 	private HBUserDAO userDAO;
 	
@@ -58,7 +64,9 @@ public class HBUserService
 			genreDAO.save(genre);
 			return true;
 		}
-		catch(IllegalArgumentException e){			
+		catch(IllegalArgumentException e){
+			myLogger.error("in addGenre:service");
+			myLogger.error(e.getMessage());
 			return false;
 		}
 		
@@ -69,7 +77,9 @@ public class HBUserService
 			matchDAO.save(match);
 			return true;
 		}
-		catch(IllegalArgumentException e){			
+		catch(IllegalArgumentException e){
+			myLogger.error("in addOrUpdateMatch:service");
+			myLogger.error(e.getMessage());			
 			return false;
 		}
 	}
@@ -109,6 +119,8 @@ public class HBUserService
 		}
 		catch(NoSuchElementException e)
 		{
+			myLogger.error("in findGenreFromUser:service");
+			myLogger.error(e.getMessage());
 			return false;
 		}
 		return false;
@@ -209,6 +221,8 @@ public class HBUserService
 		}
 		catch(NoSuchElementException e)
 		{
+			myLogger.error("in findAccountById:service");
+			myLogger.error(e.getMessage());
 			return null;
 		}
 	}
@@ -220,6 +234,8 @@ public class HBUserService
 		}
 		catch(NoSuchElementException e)
 		{
+			myLogger.error("in findAccountByUsername:service");
+			myLogger.error(e.getMessage());
 			return null;
 		}
 	}
@@ -236,6 +252,8 @@ public class HBUserService
 		}
 		catch(IllegalArgumentException e)
 		{
+			myLogger.error("in addOrUpdateHBUserAccount:service");
+			myLogger.error(e.getMessage());
 			return null;
 		}
 
@@ -250,6 +268,8 @@ public class HBUserService
 		}
 		catch(IllegalArgumentException e)
 		{
+			myLogger.error("in addOrUpdateHBUserTopArtist:service");
+			myLogger.error(e.getMessage());
 			return false;
 		}
 	}
@@ -257,8 +277,23 @@ public class HBUserService
 	@Transactional
 	public boolean deleteHBUserTopArtists(HBUserAccount user)
 	{
-		artistDAO.deleteByUser(user);
-		return true;
+		try {
+			artistDAO.deleteByUser(user);
+			return true;
+		}catch(IllegalArgumentException e) {
+			return false;
+		}
+	}
+	
+	@Transactional
+	public boolean deleteHBTopArtist(HBTopArtist artist)
+	{
+		try {
+			artistDAO.delete(artist);
+			return true;
+		}catch(IllegalArgumentException e) {
+			return false;
+		}
 	}
 	
 	public boolean addHBUserTopArtists(List<HBTopArtist> artists)
@@ -277,6 +312,17 @@ public class HBUserService
 		return artistDAO.findByUser(account);
 	}
 	
+	public HBTopArtist findTopArtistByID(int id)
+	{
+		try {
+			return artistDAO.findById(id).get();
+		}
+		catch(NoSuchElementException e)
+		{
+			return null;
+		}
+	}
+	
 	public boolean deleteHBUserAccount(int id)
 	{
 		try {
@@ -286,6 +332,8 @@ public class HBUserService
 		}
 		catch(IllegalArgumentException e)
 		{
+			myLogger.error("in deleteHBUserAccount:service");
+			myLogger.error(e.getMessage());
 			return false;
 		}
 	}

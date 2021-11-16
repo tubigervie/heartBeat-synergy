@@ -13,11 +13,15 @@ import com.revature.models.HBLoginDTO;
 import com.revature.models.HBUserAccount;
 import com.revature.services.HBUserService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @CrossOrigin(origins="*", allowedHeaders="*")
 @RestController
 @RequestMapping(value="/login")
 public class HBLoginController 
 {
+	public static Logger myLogger = LoggerFactory.getLogger("myLogger");
 	
 	private HBUserService userService;
 	
@@ -32,8 +36,10 @@ public class HBLoginController
 	{
 		//insert password encryption logic here
 		HBUserAccount userAccount = userService.findAccountByUsername(login.username);
-		if(userAccount == null || !userAccount.getPassword().equals(login.password))
+		if(userAccount == null || !userAccount.getPassword().equals(login.password)){
+			myLogger.info("in loginToAccount:HBLoginController-> userAccount is null or password isn't in DB");
 			return ResponseEntity.status(400).build();
+		}
 		return new ResponseEntity<HBUserAccount>(userAccount, HttpStatus.ACCEPTED);
 	}
 }

@@ -26,11 +26,15 @@ import com.revature.models.HBUserAccount;
 import com.revature.models.HBUserImage;
 import com.revature.services.HBUserService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @CrossOrigin(origins="*", allowedHeaders="*")
 @RestController
 @RequestMapping(value="/account")
 public class HBUserController 
 {
+	public static Logger myLogger = LoggerFactory.getLogger("myLogger");
 	private HBUserService userService;
 	
 	@Autowired
@@ -60,6 +64,7 @@ public class HBUserController
 		genre.setUser(account);
 		boolean isAdded = userService.addGenre(genre);
 		if(!isAdded) {
+			myLogger.info("in addTopGenreToAccount:HBUserController-> genre hasn't been added");
 			return ResponseEntity.status(400).build();
 		}
 		else {
@@ -72,6 +77,7 @@ public class HBUserController
 	{
 		HBUserAccount account = userService.findAccountById(id);
 		if(account == null) {
+			myLogger.info("in addTopGenresToAccount:HBUserController-> account is null");
 			return ResponseEntity.status(400).build();
 		}
 		userService.deleteHBUserTopGenres(account);
@@ -80,6 +86,7 @@ public class HBUserController
 			genre.setUser(account);
 			boolean isAdded = userService.addGenre(genre);
 			if(!isAdded) {
+				myLogger.info("in deleteHBUserTopGenres:HBUserController-> genre hasn't been added");
 				return ResponseEntity.status(400).build();
 			}
 		}
@@ -92,6 +99,7 @@ public class HBUserController
 	{
 		HBUserAccount account = userService.findAccountById(id);
 		if(account == null) {
+			myLogger.info("in deleteTopGenresFromAccount:HBUserController-> account is null");
 			return ResponseEntity.status(400).build();
 		}
 		userService.deleteHBUserTopGenres(account);
@@ -124,12 +132,12 @@ public class HBUserController
 	{
 		HBUserAccount account = userService.findAccountById(id);
 		if(account == null) return ResponseEntity.status(400).build();
-		boolean clearedPreviousArtists = userService.deleteHBUserTopArtists(account);
-		if(!clearedPreviousArtists) return ResponseEntity.status(400).build();
 		artist.setUser(account);
 		boolean isAdded = userService.addOrUpdateHBUserTopArtist(artist);
 		if(!isAdded)
 			return ResponseEntity.status(400).build();
+			myLogger.info("in addTopArtistToAccount:HBUserController-> top artist hasn't been added");
+
 		return ResponseEntity.status(201).build();
 	}
 	
@@ -137,15 +145,24 @@ public class HBUserController
 	public ResponseEntity<HBUserAccount> addTopArtistsToAccount(@PathVariable("id") int id, @RequestBody List<HBTopArtist> artists)
 	{
 		HBUserAccount account = userService.findAccountById(id);
-		if(account == null) return ResponseEntity.status(400).build();
+		if(account == null){
+			myLogger.info("in addTopArtistsToAccount:HBUserController-> account is null");
+			return ResponseEntity.status(400).build();
+		} 
 		boolean clearedPreviousArtists = userService.deleteHBUserTopArtists(account);
-		if(!clearedPreviousArtists) return ResponseEntity.status(400).build();
+		if(!clearedPreviousArtists){
+			myLogger.info("in addTopArtistsToAccount:HBUserController-> previous artist's haven't been cleared");
+			return ResponseEntity.status(400).build();
+		} 
 		for(HBTopArtist artist : artists)
 		{
 			artist.setUser(account);
 		}
 		boolean addedAllArtists = userService.addHBUserTopArtists(artists);
-		if(!addedAllArtists) return ResponseEntity.status(400).build();
+		if(!addedAllArtists){
+			myLogger.info("in addTopArtistsToAccount:HBUserController-> all artists haven't been added");
+			return ResponseEntity.status(400).build();
+		} 
 		return ResponseEntity.status(200).build();
 	}
 	
@@ -153,9 +170,38 @@ public class HBUserController
 	public ResponseEntity<HBUserAccount> deleteTopArtistsFromAccount(@PathVariable("id") int id)
 	{
 		HBUserAccount account = userService.findAccountById(id);
-		if(account == null) return ResponseEntity.status(400).build();
+		if(account == null){
+			myLogger.info("in deleteTopArtistsFromAccount:HBUserController-> account is null");
+			return ResponseEntity.status(400).build();
+		} 
 		boolean clearedPreviousArtists = userService.deleteHBUserTopArtists(account);
-		if(!clearedPreviousArtists) return ResponseEntity.status(400).build();
+		if(!clearedPreviousArtists){
+			myLogger.info("in deleteTopArtistsFromAccount:HBUserController-> previous artists haven't been cleared");
+			return ResponseEntity.status(400).build();
+		} 
+		return ResponseEntity.status(200).build();
+	}
+	
+	@DeleteMapping("/{id}/artist/{artistId}")
+	public ResponseEntity<HBTopArtist> deleteTopArtistFromAccount(@PathVariable("id") int id, @PathVariable("artistId") int artistId)
+	{
+		System.out.println("calling delete mapping");
+		HBUserAccount account = userService.findAccountById(id);
+		if(account == null){
+			myLogger.info("in deleteTopArtistsFromAccount:HBUserController-> account is null");
+			return ResponseEntity.status(400).build();
+		}
+		HBTopArtist artist = userService.findTopArtistByID(artistId);
+		if(artist == null)
+		{
+			myLogger.info("in deleteTopArtistsFromAccount:HBUserController-> artist is null");
+			return ResponseEntity.status(400).build();
+		}
+		boolean clearedArtist = userService.deleteHBTopArtist(artist);
+		if(!clearedArtist){
+			myLogger.info("in deleteTopArtistFromAccount:HBUserController-> previous artist hasn't been cleared");
+			return ResponseEntity.status(400).build();
+		} 
 		return ResponseEntity.status(200).build();
 	}
 	
@@ -163,8 +209,11 @@ public class HBUserController
 	public ResponseEntity<HBUserAccount> addAccount(@RequestBody HBUserAccount account)
 	{
 		HBUserAccount addedAccount = userService.addOrUpdateHBUserAccount(account);
-		if(addedAccount == null)
+		if(addedAccount == null){
+			myLogger.info("in addAccount:HBUserController-> addedAccount is null");
 			return ResponseEntity.status(400).build();
+		}
+			
 		return new ResponseEntity<HBUserAccount>(addedAccount, HttpStatus.CREATED);
 	}
 	
@@ -172,11 +221,16 @@ public class HBUserController
 	public ResponseEntity<HBUserAccount> addPhotoData(@PathVariable("id") int id, @RequestPart("image") MultipartFile multipartFile)
 	{
 		HBUserAccount account = userService.findAccountById(id);
-		if(account == null) return ResponseEntity.status(400).build();
+		if(account == null){
+			myLogger.info("in addPhotoData:HBUserController-> account is null");
+			return ResponseEntity.status(400).build();
+		} 
 		userService.deleteUserImages(account);
 		try {
 			userService.storeImage(account, multipartFile);
 		} catch (IOException e) {
+			myLogger.info("in addPhotoData:HBUserController");
+			myLogger.error("e.getStackTrace()");
 			return ResponseEntity.status(400).build();
 		}
 		return ResponseEntity.status(201).build();
@@ -186,7 +240,10 @@ public class HBUserController
 	public ResponseEntity<HBUserAccount> deleteImages(@PathVariable("id") int id)
 	{
 		HBUserAccount account = userService.findAccountById(id);
-		if(account == null) return ResponseEntity.status(400).build();
+		if(account == null){
+			myLogger.info("in deleteImage:HBUserController-> account is null");
+			return ResponseEntity.status(400).build();
+		};
 		userService.deleteUserImages(account);
 		return ResponseEntity.status(201).build();
 	}
@@ -203,8 +260,11 @@ public class HBUserController
 	public ResponseEntity<HBUserAccount> deleteAccount(@PathVariable("id") int id)
 	{
 		boolean isDeleted = userService.deleteHBUserAccount(id);
-		if(!isDeleted)
+		if(!isDeleted){
+			myLogger.info("in deleteAccount:HBUserController-> account failed to delete");
 			return ResponseEntity.status(400).build();
+		}
+			
 		return ResponseEntity.status(201).build();
 	}
 	
@@ -212,10 +272,16 @@ public class HBUserController
 	public ResponseEntity<HBMatch> addOrUpdateMatch(@PathVariable("id") int id, @RequestBody HBMatch match)
 	{
 		HBUserAccount account = userService.findAccountById(id);
-		if(account == null) return ResponseEntity.status(400).build();
-		boolean isAdded = userService.addOrUpdateMatch(match);
-		if(!isAdded)
+		if(account == null){
+			myLogger.info("in addOrUpdateMatch:HBUserController-> account is null");
 			return ResponseEntity.status(400).build();
+		} 
+		boolean isAdded = userService.addOrUpdateMatch(match);
+		if(!isAdded){
+			myLogger.info("in addOrUpdateMatch:HBUserController-> account hasn't been added to match");
+			return ResponseEntity.status(400).build();
+		}
+			
 		return ResponseEntity.status(201).build();
 	}
 	
@@ -237,7 +303,10 @@ public class HBUserController
 	public ResponseEntity<HBMatch> getMatchByCombination(@PathVariable("id") int id, @PathVariable("oid") int oid)
 	{
 		HBMatch match = userService.findExistingMatchByCombination(id, oid);
-		if(match == null) return ResponseEntity.status(400).build();
+		if(match == null){
+			myLogger.info("in getMatchByCombination:HBUserController-> match is null");
+			return ResponseEntity.status(400).build();
+		} 
 		return new ResponseEntity<HBMatch>(match, HttpStatus.OK);
 	}
 	
