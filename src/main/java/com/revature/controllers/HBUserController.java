@@ -132,8 +132,6 @@ public class HBUserController
 	{
 		HBUserAccount account = userService.findAccountById(id);
 		if(account == null) return ResponseEntity.status(400).build();
-		boolean clearedPreviousArtists = userService.deleteHBUserTopArtists(account);
-		if(!clearedPreviousArtists) return ResponseEntity.status(400).build();
 		artist.setUser(account);
 		boolean isAdded = userService.addOrUpdateHBUserTopArtist(artist);
 		if(!isAdded)
@@ -179,6 +177,29 @@ public class HBUserController
 		boolean clearedPreviousArtists = userService.deleteHBUserTopArtists(account);
 		if(!clearedPreviousArtists){
 			myLogger.info("in deleteTopArtistsFromAccount:HBUserController-> previous artists haven't been cleared");
+			return ResponseEntity.status(400).build();
+		} 
+		return ResponseEntity.status(200).build();
+	}
+	
+	@DeleteMapping("/{id}/artist/{artistId}")
+	public ResponseEntity<HBTopArtist> deleteTopArtistFromAccount(@PathVariable("id") int id, @PathVariable("artistId") int artistId)
+	{
+		System.out.println("calling delete mapping");
+		HBUserAccount account = userService.findAccountById(id);
+		if(account == null){
+			myLogger.info("in deleteTopArtistsFromAccount:HBUserController-> account is null");
+			return ResponseEntity.status(400).build();
+		}
+		HBTopArtist artist = userService.findTopArtistByID(artistId);
+		if(artist == null)
+		{
+			myLogger.info("in deleteTopArtistsFromAccount:HBUserController-> artist is null");
+			return ResponseEntity.status(400).build();
+		}
+		boolean clearedArtist = userService.deleteHBTopArtist(artist);
+		if(!clearedArtist){
+			myLogger.info("in deleteTopArtistFromAccount:HBUserController-> previous artist hasn't been cleared");
 			return ResponseEntity.status(400).build();
 		} 
 		return ResponseEntity.status(200).build();

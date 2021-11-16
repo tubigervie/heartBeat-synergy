@@ -277,8 +277,23 @@ public class HBUserService
 	@Transactional
 	public boolean deleteHBUserTopArtists(HBUserAccount user)
 	{
-		artistDAO.deleteByUser(user);
-		return true;
+		try {
+			artistDAO.deleteByUser(user);
+			return true;
+		}catch(IllegalArgumentException e) {
+			return false;
+		}
+	}
+	
+	@Transactional
+	public boolean deleteHBTopArtist(HBTopArtist artist)
+	{
+		try {
+			artistDAO.delete(artist);
+			return true;
+		}catch(IllegalArgumentException e) {
+			return false;
+		}
 	}
 	
 	public boolean addHBUserTopArtists(List<HBTopArtist> artists)
@@ -295,6 +310,17 @@ public class HBUserService
 	{
 		HBUserAccount account = findAccountById(id);
 		return artistDAO.findByUser(account);
+	}
+	
+	public HBTopArtist findTopArtistByID(int id)
+	{
+		try {
+			return artistDAO.findById(id).get();
+		}
+		catch(NoSuchElementException e)
+		{
+			return null;
+		}
 	}
 	
 	public boolean deleteHBUserAccount(int id)
