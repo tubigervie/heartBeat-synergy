@@ -52,7 +52,7 @@ class SynergyProject2ApplicationTests {
 	//User tests
 	
 	private static Logger log = LoggerFactory.getLogger(SynergyProject2ApplicationTests.class);
-	HBUserAccount userAccount = new HBUserAccount("hbUserTester1", "testpass", "testname", "testlast", 0, "testDesc", "testList", "testAnthem", null, null, "EVERYONE", "EVERYONE");
+	HBUserAccount userAccount = new HBUserAccount("hbUserTester1", "testpass", "testname", "testlast", 0, "testDesc", "testAnthem", null, null, "EVERYONE", "EVERYONE");
 	HBTopArtist topArtist = new HBTopArtist(0, "testArtistId", "testArtistName", "test", null);
 	HBTopGenre topGenre = new HBTopGenre("test");
 	HBMatch match = new HBMatch(userAccount.getId(), userAccount.getId(), "ACCEPT", "ACCEPT");
