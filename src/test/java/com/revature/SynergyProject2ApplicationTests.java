@@ -50,13 +50,13 @@ class SynergyProject2ApplicationTests {
 	List <HBTopGenre> topGenreList = new ArrayList<HBTopGenre>();
 
 	HBUserAccount userAccount1 = new HBUserAccount("hbUserTester1", "testpass", "testname", "testlast", 0,
-	"testDesc", "testList", "testAnthem", topArtistList, topGenreList, "EVERYONE", "EVERYONE");
+	"testDesc", "testAnthem", topArtistList, topGenreList, "EVERYONE", "EVERYONE");
 	HBUserAccount userAccount2 = new HBUserAccount("hbUserTester2", "testpass", "testname", "testlast", 0,
-	"testDesc", "testList", "testAnthem", topArtistList, topGenreList, "EVERYONE", "EVERYONE");
+	"testDesc", "testAnthem", topArtistList, topGenreList, "EVERYONE", "EVERYONE");
 	HBUserAccount userAccount3 = new HBUserAccount("hbUserTester3", "testpass", "testname", "testlast", 0,
-	"testDesc", "testList", "testAnthem", topArtistList, topGenreList, "EVERYONE", "EVERYONE");
+	"testDesc", "testAnthem", topArtistList, topGenreList, "EVERYONE", "EVERYONE");
 	HBUserAccount userAccount4 = new HBUserAccount("hbUserTester4", "testpass", "testname", "testlast", 0,
-	"testDesc", "testList", "testAnthem", topArtistList, topGenreList, "EVERYONE", "EVERYONE");
+	"testDesc", "testAnthem", topArtistList, topGenreList, "EVERYONE", "EVERYONE");
 
 	HBTopArtist topArtist = new HBTopArtist(0, "testArtistId", "testArtistName", "test", null);
 	HBTopGenre topGenre = new HBTopGenre("test");
