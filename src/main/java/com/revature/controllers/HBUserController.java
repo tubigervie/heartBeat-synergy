@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +26,7 @@ import com.revature.models.HBTopGenre;
 import com.revature.models.HBUserAccount;
 import com.revature.models.HBUserImage;
 import com.revature.services.HBUserService;
+import com.revature.utils.CryptoUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -207,13 +209,12 @@ public class HBUserController
 	
 	@PostMapping
 	public ResponseEntity<HBUserAccount> addAccount(@RequestBody HBUserAccount account)
-	{
+	{	
 		HBUserAccount addedAccount = userService.addOrUpdateHBUserAccount(account);
 		if(addedAccount == null){
 			myLogger.info("in addAccount:HBUserController-> addedAccount is null");
 			return ResponseEntity.status(400).build();
 		}
-			
 		return new ResponseEntity<HBUserAccount>(addedAccount, HttpStatus.CREATED);
 	}
 	

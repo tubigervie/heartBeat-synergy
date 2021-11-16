@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.revature.repos.HBTopArtistDAO;
 import com.revature.repos.HBTopGenreDAO;
 import com.revature.repos.HBUserDAO;
 import com.revature.repos.HBUserImageDAO;
+import com.revature.utils.CryptoUtils;
 import com.revature.utils.FileUploadUtil;
 
 import org.slf4j.Logger;
@@ -243,6 +245,18 @@ public class HBUserService
 	public HBUserAccount addOrUpdateHBUserAccount(HBUserAccount account)
 	{
 		try {
+			if(account.getId() == 0)
+			{
+				try 
+				{
+					byte[] sha = CryptoUtils.getSHA(account.getPassword());
+					account.setPassword(CryptoUtils.Encrypt(sha));
+				} catch (NoSuchAlgorithmException e) {
+					myLogger.error("Could not encrypt password");
+					myLogger.error(e.toString());
+					return null;
+				}
+			}
 			if(account.getFilterType() == null)
 				account.setFilterType(FilterMatchType.EVERYONE);
 			if(account.getUserType() == null)

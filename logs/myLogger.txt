@@ -4,3 +4,6 @@
 18:27:45.626 [] [http-nio-8083-exec-1] INFO  myLogger - in getMatchByCombination:HBUserController-> match is null
 18:30:48.791 [] [http-nio-8083-exec-1] INFO  myLogger - in addTopArtistToAccount:HBUserController-> top artist hasn't been added
 18:31:43.308 [] [http-nio-8083-exec-5] INFO  myLogger - in addTopArtistToAccount:HBUserController-> top artist hasn't been added
+09:47:50.882 [] [main] ERROR myLogger - in findAccountById:service
+09:47:50.883 [] [main] ERROR myLogger - No value present
+09:47:51.244 [] [main] INFO  myLogger - in loginToAccount:HBLoginController-> userAccount is null or password isn't in DB

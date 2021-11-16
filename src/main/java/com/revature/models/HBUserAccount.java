@@ -41,7 +41,6 @@ public class HBUserAccount
 	
 	private String profileDescription;
 	
-	private String playlist;
 	
 	private String anthem;
 	
@@ -60,7 +59,7 @@ public class HBUserAccount
 	private FilterMatchType userType;
 
 	public HBUserAccount(int id, String username, String password, String firstName, String lastName,
-			int age, String profileDescription, String playlist, String anthem, List<HBTopArtist> topArtists,
+			int age, String profileDescription, String anthem, List<HBTopArtist> topArtists,
 			List<HBTopGenre> topGenres, String filterType, String userType) {
 		super();
 		this.id = id;
@@ -70,7 +69,6 @@ public class HBUserAccount
 		this.lastName = lastName;
 		this.age = age;
 		this.profileDescription = profileDescription;
-		this.playlist = playlist;
 		this.anthem = anthem;
 		this.topArtists = topArtists;
 		this.topGenres = topGenres;
@@ -79,7 +77,7 @@ public class HBUserAccount
 	}	
 
 	public HBUserAccount(String username, String password, String firstName, String lastName, int age, String profileDescription,
-			String playlist, String anthem, List<HBTopArtist> topArtists, List<HBTopGenre> topGenres, String filterType, String userType) {
+			String anthem, List<HBTopArtist> topArtists, List<HBTopGenre> topGenres, String filterType, String userType) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -87,7 +85,6 @@ public class HBUserAccount
 		this.lastName = lastName;
 		this.age = age;
 		this.profileDescription = profileDescription;
-		this.playlist = playlist;
 		this.anthem = anthem;
 		this.topArtists = topArtists;
 		this.topGenres = topGenres;
@@ -163,14 +160,6 @@ public class HBUserAccount
 		this.profileDescription = profileDescription;
 	}
 
-	public String getPlaylist() {
-		return playlist;
-	}
-
-	public void setPlaylist(String playlist) {
-		this.playlist = playlist;
-	}
-
 	public String getAnthem() {
 		return anthem;
 	}
@@ -224,7 +213,6 @@ public class HBUserAccount
 		result = prime * result + id;
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((playlist == null) ? 0 : playlist.hashCode());
 		result = prime * result + ((profileDescription == null) ? 0 : profileDescription.hashCode());
 		result = prime * result + ((topArtists == null) ? 0 : topArtists.hashCode());
 		result = prime * result + ((topGenres == null) ? 0 : topGenres.hashCode());
@@ -268,11 +256,6 @@ public class HBUserAccount
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
-		if (playlist == null) {
-			if (other.playlist != null)
-				return false;
-		} else if (!playlist.equals(other.playlist))
-			return false;
 		if (profileDescription == null) {
 			if (other.profileDescription != null)
 				return false;
@@ -291,10 +274,8 @@ public class HBUserAccount
 	@Override
 	public String toString() {
 		return "HBUserAccount [id=" + id + ", username=" + username + ", password=" + password + ", firstName="
-				+ firstName + ", lastName=" + lastName + ", profileDescription=" + profileDescription + ", playlist="
-				+ playlist + ", anthem=" + anthem + ", topArtists=" + topArtists + ", topGenres=" + topGenres + "]";
-	}
-	
-	
+				+ firstName + ", lastName=" + lastName + ", profileDescription=" + profileDescription + ", anthem="
+				+ anthem + ", topArtists=" + topArtists + ", topGenres=" + topGenres + "]";
+	}	
 	
 }

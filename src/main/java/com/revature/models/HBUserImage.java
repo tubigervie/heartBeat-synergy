@@ -35,6 +35,7 @@ public class HBUserImage
 	public HBUserImage(String name, String type, HBUserAccount user, byte[] picByte) {
 		super();
 		this.name = name;
+		this.type = type;
 		this.user = user;
 		this.picByte = picByte;
 	}
@@ -42,6 +43,7 @@ public class HBUserImage
 	public HBUserImage(int id, String name, String type, HBUserAccount user, byte[] picByte) {
 		super();
 		this.id = id;
+		this.type = type;
 		this.name = name;
 		this.user = user;
 		this.picByte = picByte;
