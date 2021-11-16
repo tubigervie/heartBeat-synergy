@@ -65,8 +65,8 @@ public class HBUserService
 			return true;
 		}
 		catch(IllegalArgumentException e){
-			myLogger.error("in addGenre:service");
-			myLogger.error(e.getMessage());
+			myLogger.info("in addGenre:service");
+			myLogger.info(e.getMessage());
 			return false;
 		}
 		
@@ -78,8 +78,8 @@ public class HBUserService
 			return true;
 		}
 		catch(IllegalArgumentException e){
-			myLogger.error("in addOrUpdateMatch:service");
-			myLogger.error(e.getMessage());			
+			myLogger.info("in addOrUpdateMatch:service");
+			myLogger.info(e.getMessage());			
 			return false;
 		}
 	}
@@ -119,8 +119,8 @@ public class HBUserService
 		}
 		catch(NoSuchElementException e)
 		{
-			myLogger.error("in findGenreFromUser:service");
-			myLogger.error(e.getMessage());
+			myLogger.info("in findGenreFromUser:service");
+			myLogger.info(e.getMessage());
 			return false;
 		}
 		return false;
@@ -221,8 +221,8 @@ public class HBUserService
 		}
 		catch(NoSuchElementException e)
 		{
-			myLogger.error("in findAccountById:service");
-			myLogger.error(e.getMessage());
+			myLogger.info("in findAccountById:service");
+			myLogger.info(e.getMessage());
 			return null;
 		}
 	}
@@ -234,8 +234,8 @@ public class HBUserService
 		}
 		catch(NoSuchElementException e)
 		{
-			myLogger.error("in findAccountByUsername:service");
-			myLogger.error(e.getMessage());
+			myLogger.info("in findAccountByUsername:service");
+			myLogger.info(e.getMessage());
 			return null;
 		}
 	}
@@ -252,8 +252,8 @@ public class HBUserService
 		}
 		catch(IllegalArgumentException e)
 		{
-			myLogger.error("in addOrUpdateHBUserAccount:service");
-			myLogger.error(e.getMessage());
+			myLogger.info("in addOrUpdateHBUserAccount:service");
+			myLogger.info(e.getMessage());
 			return null;
 		}
 
@@ -268,8 +268,8 @@ public class HBUserService
 		}
 		catch(IllegalArgumentException e)
 		{
-			myLogger.error("in addOrUpdateHBUserTopArtist:service");
-			myLogger.error(e.getMessage());
+			myLogger.info("in addOrUpdateHBUserTopArtist:service");
+			myLogger.info(e.getMessage());
 			return false;
 		}
 	}
@@ -332,8 +332,8 @@ public class HBUserService
 		}
 		catch(IllegalArgumentException e)
 		{
-			myLogger.error("in deleteHBUserAccount:service");
-			myLogger.error(e.getMessage());
+			myLogger.info("in deleteHBUserAccount:service");
+			myLogger.info(e.getMessage());
 			return false;
 		}
 	}

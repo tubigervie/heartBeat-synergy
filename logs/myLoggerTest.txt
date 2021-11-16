@@ -1,0 +1,14 @@
+15:12:57.495 [] [main] INFO  myLogger - NEW TEST:
+15:12:59.739 [] [main] INFO  myLogger - in findAccountById:service
+15:12:59.740 [] [main] INFO  myLogger - No value present
+15:16:38.416 [] [main] INFO  myLoggerTest - NEW TEST:
+15:28:58.196 [] [main] INFO  myLoggerTest - NEW TEST:
+15:29:38.213 [] [main] INFO  myLoggerTest - NEW TEST:
+15:31:42.782 [] [main] INFO  myLoggerTest - NEW TEST:
+15:32:46.388 [] [main] INFO  myLoggerTest - NEW TEST:
+15:36:04.977 [] [main] INFO  myLoggerTest - NEW TEST:
+15:36:45.791 [] [main] INFO  myLoggerTest - NEW TEST:
+15:37:28.768 [] [main] INFO  myLoggerTest - NEW TEST:
+15:39:07.085 [] [main] INFO  myLoggerTest - NEW TEST:
+15:39:44.650 [] [main] INFO  myLoggerTest - NEW TEST:
+15:40:24.782 [] [main] INFO  myLoggerTest - NEW TEST:

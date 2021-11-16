@@ -230,7 +230,7 @@ public class HBUserController
 			userService.storeImage(account, multipartFile);
 		} catch (IOException e) {
 			myLogger.info("in addPhotoData:HBUserController");
-			myLogger.error("e.getStackTrace()");
+			myLogger.info("e.getStackTrace()");
 			return ResponseEntity.status(400).build();
 		}
 		return ResponseEntity.status(201).build();
