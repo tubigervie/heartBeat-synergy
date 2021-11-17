@@ -210,6 +210,7 @@ class SynergyProject2ApplicationTests {
 		userService.deleteGenre(newTopGenre2);
 	}
 	
+	// comment to test jenkins
 	
 	//Match tests
 	@Test
