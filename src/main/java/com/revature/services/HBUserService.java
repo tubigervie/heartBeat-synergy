@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,9 +30,6 @@ import com.revature.repos.HBUserDAO;
 import com.revature.repos.HBUserImageDAO;
 import com.revature.utils.CryptoUtils;
 import com.revature.utils.FileUploadUtil;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class HBUserService 
@@ -65,8 +65,7 @@ public class HBUserService
 		try {
 			genreDAO.save(genre);
 			return true;
-		}
-		catch(IllegalArgumentException e){
+		}catch(InvalidDataAccessApiUsageException e) {
 			myLogger.info("in addGenre:service");
 			myLogger.info(e.getMessage());
 			return false;
@@ -79,9 +78,9 @@ public class HBUserService
 			matchDAO.save(match);
 			return true;
 		}
-		catch(IllegalArgumentException e){
+		catch(InvalidDataAccessApiUsageException e) {
 			myLogger.info("in addOrUpdateMatch:service");
-			myLogger.info(e.getMessage());			
+			myLogger.info(e.getMessage());
 			return false;
 		}
 	}
@@ -131,6 +130,7 @@ public class HBUserService
 	
 	public boolean addHBUserTopGenres(List<HBTopGenre> genres)
 	{
+		if(genres == null) return false;
 		for(HBTopGenre genre : genres)
 		{
 			if(!addGenre(genre))
@@ -164,7 +164,7 @@ public class HBUserService
 			List<HBTopGenre> others = genreDAO.findOtherByGenre(genre.getGenre()).get();
 			for(HBTopGenre otherGenre : others)
 			{
-				if(otherGenre.getUser() != user)
+				if(!otherGenre.getUser().getUsername().equals(user.getUsername()))
 				{
 					HBMatch match = findExistingMatchByCombination(user.getId(), otherGenre.getUser().getId());
 					if((match == null && (user.getFilterType() == FilterMatchType.EVERYONE || otherGenre.getUser().getUserType() == user.getFilterType())) || (match != null && match.getMatchee() == otherGenre.getUser().getId() && match.getMatcheeResponse() == MatchResponse.PENDING))
@@ -231,46 +231,26 @@ public class HBUserService
 	
 	public HBUserAccount findAccountByUsername(String username)
 	{
-		try {
 			return userDAO.findByUsernameIgnoreCase(username);
-		}
-		catch(NoSuchElementException e)
-		{
-			myLogger.info("in findAccountByUsername:service");
-			myLogger.info(e.getMessage());
-			return null;
-		}
 	}
 	
 	public HBUserAccount addOrUpdateHBUserAccount(HBUserAccount account)
 	{
-		try {
-			if(account.getId() == 0)
-			{
-				try 
-				{
-					byte[] sha = CryptoUtils.getSHA(account.getPassword());
-					account.setPassword(CryptoUtils.Encrypt(sha));
-				} catch (NoSuchAlgorithmException e) {
-					myLogger.error("Could not encrypt password");
-					myLogger.error(e.toString());
-					return null;
-				}
-			}
-			if(account.getFilterType() == null)
-				account.setFilterType(FilterMatchType.EVERYONE);
-			if(account.getUserType() == null)
-				account.setUserType(FilterMatchType.EVERYONE);
-			HBUserAccount updatedAccount = userDAO.save(account);
-			return updatedAccount;
-		}
-		catch(IllegalArgumentException e)
+		if(account == null) return null;
+		if(account.getId() == 0)
 		{
-			myLogger.info("in addOrUpdateHBUserAccount:service");
-			myLogger.info(e.getMessage());
-			return null;
+			try 
+			{
+				byte[] sha = CryptoUtils.getSHA(account.getPassword());
+				account.setPassword(CryptoUtils.Encrypt(sha));
+			} catch (NoSuchAlgorithmException e) {
+				myLogger.error("Could not encrypt password");
+				myLogger.error(e.toString());
+				return null;
+			}
 		}
-
+		HBUserAccount updatedAccount = userDAO.save(account);
+		return updatedAccount;
 	}
 	
 	public boolean addOrUpdateHBUserTopArtist(HBTopArtist artist)
@@ -280,38 +260,48 @@ public class HBUserService
 			artistDAO.save(artist);
 			return true;
 		}
-		catch(IllegalArgumentException e)
-		{
+		catch(InvalidDataAccessApiUsageException e) {
 			myLogger.info("in addOrUpdateHBUserTopArtist:service");
 			myLogger.info(e.getMessage());
 			return false;
 		}
 	}
 	
-	@Transactional
+	@Transactional(noRollbackFor = Exception.class)
 	public boolean deleteHBUserTopArtists(HBUserAccount user)
 	{
-		try {
-			artistDAO.deleteByUser(user);
-			return true;
-		}catch(IllegalArgumentException e) {
-			return false;
-		}
+		if(user == null) return false;
+		artistDAO.deleteByUser(user);
+		return true;
 	}
 	
 	@Transactional
 	public boolean deleteHBTopArtist(HBTopArtist artist)
 	{
-		try {
-			artistDAO.delete(artist);
-			return true;
-		}catch(IllegalArgumentException e) {
-			return false;
-		}
+		if(artist == null) return false;
+		artistDAO.delete(artist);
+		return true;
+	}
+	
+	@Transactional
+	public boolean deleteMatch(HBMatch match)
+	{
+		if(match== null) return false;
+		matchDAO.delete(match);
+		return true;
+	}
+	
+	@Transactional
+	public boolean deleteGenre(HBTopGenre genre)
+	{
+		if(genre == null) return false;
+		genreDAO.delete(genre);
+		return true;
 	}
 	
 	public boolean addHBUserTopArtists(List<HBTopArtist> artists)
 	{
+		if(artists == null) return false;
 		for(HBTopArtist artist : artists)
 		{
 			if(!addOrUpdateHBUserTopArtist(artist))
@@ -344,9 +334,8 @@ public class HBUserService
 			userDAO.delete(account);
 			return true;
 		}
-		catch(IllegalArgumentException e)
-		{
-			myLogger.info("in deleteHBUserAccount:service");
+		catch(InvalidDataAccessApiUsageException e) {
+			myLogger.info("in deleteHBUserAccounts:service");
 			myLogger.info(e.getMessage());
 			return false;
 		}

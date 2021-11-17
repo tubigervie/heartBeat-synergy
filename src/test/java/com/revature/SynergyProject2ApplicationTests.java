@@ -1,17 +1,26 @@
 package com.revature;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.revature.controllers.HBLoginController;
 import com.revature.models.HBLoginDTO;
@@ -19,14 +28,7 @@ import com.revature.models.HBMatch;
 import com.revature.models.HBTopArtist;
 import com.revature.models.HBTopGenre;
 import com.revature.models.HBUserAccount;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import com.revature.services.HBUserService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 @TestInstance(Lifecycle.PER_CLASS)
@@ -60,15 +62,15 @@ class SynergyProject2ApplicationTests {
 
 	HBTopArtist topArtist = new HBTopArtist(0, "testArtistId", "testArtistName", "test", null);
 	HBTopGenre topGenre = new HBTopGenre("test");
-	HBLoginDTO logindto = new HBLoginDTO("hbUserTester", "testpass");
+	HBLoginDTO logindto = new HBLoginDTO("hbUserTester1", "testpass");
 
 
 	@Test
 	@BeforeAll
 	public void addAccount(){
-		myLogger.info("NEW TEST:");
 		HBUserAccount test1 = userService.addOrUpdateHBUserAccount(userAccount1);
 		assertEquals(test1,userAccount1);
+		
 		HBUserAccount test2 = userService.addOrUpdateHBUserAccount(userAccount2);
 		assertEquals(test2,userAccount2);
 		
@@ -76,9 +78,7 @@ class SynergyProject2ApplicationTests {
 		assertEquals(test3,userAccount3);
 		HBUserAccount test4 = userService.addOrUpdateHBUserAccount(userAccount4);
 		assertEquals(test4,userAccount4);
-
-		myLogger.info("User Id: " + String.valueOf(userAccount1.getId()));
-
+		assertEquals(null, userService.addOrUpdateHBUserAccount(null));
 	}
 	
 	@Test
@@ -94,6 +94,7 @@ class SynergyProject2ApplicationTests {
 		myLogger.info("getAccountById testing");
 		HBUserAccount test = userService.findAccountById(userAccount1.getId());
 		assertEquals(test, userAccount1);
+		assertEquals(null, userService.findAccountById(0));
 	}
 	
 	@Test 
@@ -101,15 +102,17 @@ class SynergyProject2ApplicationTests {
 		myLogger.info("getAccountByUsername testing");
 		HBUserAccount test = userService.findAccountByUsername(userAccount1.getUsername());
 		assertEquals(test, userAccount1);
+		assertEquals(null, userService.findAccountByUsername(null));
+		assertEquals(null, userService.findAccountByUsername("NOTAUSERSHOULDNEVERBEFOUND"));
 	}
 	
 	//Artist tests
 	@Test
 	public void addTopArtistTest(){
 		myLogger.info("addTopArtist testing");
-		List<HBTopArtist> list = new ArrayList<HBTopArtist>();
-		list.add(topArtist);
-		assertTrue(userService.addHBUserTopArtists(list));
+		assertTrue(userService.addOrUpdateHBUserTopArtist(topArtist));
+		userService.deleteHBTopArtist(topArtist);
+		assertFalse(userService.addOrUpdateHBUserTopArtist(null));
 	}
 	
 	@Test
@@ -118,13 +121,19 @@ class SynergyProject2ApplicationTests {
 		List<HBTopArtist> list = new ArrayList<HBTopArtist>();
 		list.add(topArtist);
 		assertTrue(userService.addHBUserTopArtists(list));
+		userService.deleteHBTopArtist(topArtist);
+		assertFalse(userService.addHBUserTopArtists(null));
 		myLogger.info("List: " +list.toString());
 	}
 	
 	@Test
 	public void deleteHBTopArtistTest() {
 		myLogger.info("deleteTopArtis testing");
-		assertTrue(userService.deleteHBUserTopArtists(userAccount1));	
+		userService.addOrUpdateHBUserTopArtist(topArtist);
+		assertTrue(userService.deleteHBTopArtist(topArtist));
+		userService.addOrUpdateHBUserTopArtist(topArtist);
+		assertTrue(userService.deleteHBUserTopArtists(userAccount1));
+		assertFalse(userService.deleteHBTopArtist(null));
 	}
 	
 	@Test
@@ -135,11 +144,30 @@ class SynergyProject2ApplicationTests {
 		assertEquals(list.size(), 0);
 	}
 	
+	@Test
+	public void findTopArtistByIdTest(){
+		myLogger.info("findTopArtist testing");
+		assertEquals(null, userService.findTopArtistByID(0));
+	}
+	
 	//Genre tests
 	@Test
 	public void addGenreTest() {
 		myLogger.info("addGenre testing");
-		assertTrue(userService.addGenre(topGenre));
+		HBTopGenre newTopGenre = new HBTopGenre(topGenre.getGenre(), userAccount1);
+		assertTrue(userService.addGenre(newTopGenre));
+		assertTrue(userService.findGenreFromUser(userAccount1, newTopGenre));
+		userService.deleteGenre(newTopGenre);
+		assertFalse(userService.addGenre(null));
+	}
+	
+	@Test
+	public void deleteGenreTest()
+	{
+		HBTopGenre newTopGenre = new HBTopGenre(topGenre.getGenre(), userAccount1);
+		userService.addGenre(newTopGenre);
+		assertTrue(userService.deleteGenre(newTopGenre));
+		assertFalse(userService.deleteGenre(null));
 	}
 	
 	@Test
@@ -148,6 +176,8 @@ class SynergyProject2ApplicationTests {
 		List<HBTopGenre> list = new ArrayList<HBTopGenre>();
 		list.add(topGenre);
 		assertTrue(userService.addHBUserTopGenres(list));
+		userService.deleteGenre(topGenre);
+		assertFalse(userService.addHBUserTopGenres(null));
 		myLogger.info("Genre list: " +list.toString());
 	}
 	
@@ -159,6 +189,27 @@ class SynergyProject2ApplicationTests {
 		assertEquals(list.size(), 0);
 	}
 	
+	@Test
+	public void findUsersOfSimilarGenreTest()
+	{
+		HBTopGenre newTopGenre = new HBTopGenre(topGenre.getGenre(), userAccount1);
+		HBTopGenre newTopGenre2 = new HBTopGenre(topGenre.getGenre(), userAccount2);
+		userService.addGenre(newTopGenre);
+		userService.addGenre(newTopGenre2);
+		
+		HBUserAccount account1 = userService.findAccountByUsername(userAccount1.getUsername());
+		HBUserAccount account2 = userService.findAccountByUsername(userAccount2.getUsername());
+		
+		Set<HBUserAccount> set = userService.findAllOtherUserAccountsOfSameGenres(account1);
+		for(HBUserAccount account : set)
+		{
+			System.out.println("common account: " + account.getUsername());
+			if(!account.getUsername().equals(account2.getUsername())) fail();
+		}
+		userService.deleteGenre(newTopGenre);
+		userService.deleteGenre(newTopGenre2);
+	}
+	
 	
 	//Match tests
 	@Test
@@ -167,6 +218,17 @@ class SynergyProject2ApplicationTests {
 		HBMatch match = new HBMatch(userAccount1.getId(), userAccount2.getId(), "ACCEPT", "ACCEPT");
 	 	assertTrue(userService.addOrUpdateMatch(match));
 	 	myLogger.info("Match Id: " + String.valueOf(match.getId()));
+	 	userService.deleteMatch(match);
+	 	assertFalse(userService.addOrUpdateMatch(null));
+	}
+	
+	@Test
+	public void deleteMatch()
+	{
+		HBMatch match = new HBMatch(userAccount1.getId(), userAccount2.getId(), "ACCEPT", "ACCEPT");
+		userService.addOrUpdateMatch(match);
+		assertTrue(userService.deleteMatch(match));
+		assertFalse(userService.deleteMatch(null));
 	}
 	
 
@@ -178,6 +240,7 @@ class SynergyProject2ApplicationTests {
 		match = userService.findExistingMatchByCombination(userAccount1.getId(), userAccount2.getId());
 		assertEquals(match.getMatcher(), userAccount1.getId());
 		assertEquals(match.getMatchee(), userAccount2.getId());
+		userService.deleteMatch(match);
 	}
 	
 	@Test
@@ -199,6 +262,12 @@ class SynergyProject2ApplicationTests {
 
 		assertEquals(_list.get(0), userAccount2);
 		assertEquals(_list.get(1), userAccount3);
+		
+		_list = userService.findAllOtherMatchedAccounts(userAccount2);
+		assertEquals(_list.get(0), userAccount1);
+		
+		userService.deleteMatch(match1);
+		userService.deleteMatch(match2);
 	}
 	
 
@@ -206,29 +275,36 @@ class SynergyProject2ApplicationTests {
 	public void findAllOtherPendingAccountsTest() {
 		myLogger.info("findAllOtherPendingAccount testing");
 
-		List<HBUserAccount> allUsers = userService.findAllUserAccounts();
 		List<HBUserAccount> pendingAccounts = new ArrayList<HBUserAccount>();
+		
+		HBMatch match1 = new HBMatch(userAccount1.getId(), userAccount2.getId(), "ACCEPT", "PENDING");
+		HBMatch match2 = new HBMatch(userAccount1.getId(), userAccount3.getId(), "ACCEPT", "PENDING");
+
+		userService.addOrUpdateMatch(match1);
+		userService.addOrUpdateMatch(match2);
 
 		pendingAccounts = userService.findAllOtherPendingAccounts(userAccount1);
 
-		assertEquals(pendingAccounts.get(0), allUsers.get(1));
-		assertEquals(pendingAccounts.get(1), allUsers.get(2));
-		assertEquals(pendingAccounts.get(2), allUsers.get(3));
-
+		assertEquals(pendingAccounts.get(0), userAccount2);
+		assertEquals(pendingAccounts.get(1), userAccount3);
+		
+		pendingAccounts = userService.findAllOtherPendingAccounts(userAccount2);
+		assertEquals(pendingAccounts.get(0), userAccount1);
+		
+		userService.deleteMatch(match1);
+		userService.deleteMatch(match2);
 	}
 	
 	//Login tests
 	@Test
 	public void loginTest() {
-		myLogger.info("login testing");
-		assertEquals(loginController.loginToAccount(logindto),userAccount1);
+		assertEquals(loginController.loginToAccount(logindto), new ResponseEntity<HBUserAccount>(userAccount1, HttpStatus.ACCEPTED));
 	}
-	
-
 
 	@AfterAll
 	public void DeleteAccount() {
-		userService.deleteHBUserAccount(userAccount1.getId());
+		assertFalse(userService.deleteHBUserAccount(0));
+		assertTrue(userService.deleteHBUserAccount(userAccount1.getId()));
 		userService.deleteHBUserAccount(userAccount2.getId());
 		userService.deleteHBUserAccount(userAccount3.getId());
 		userService.deleteHBUserAccount(userAccount4.getId());
