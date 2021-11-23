@@ -72,10 +72,10 @@ Backend:
 
 
 ## Contributors
-bucknermi(Michael Buckner)
-tubigervie(Ervie Tubig)
-Build-coder Phil Wood(Phil Wood)
-AAcosta9600(Alejandro Acosta)
-FeltonMac(Felton McCarty)
+* bucknermi(Michael Buckner)
+* tubigervie(Ervie Tubig)
+* Build-coder Phil Wood(Phil Wood)
+* AAcosta9600(Alejandro Acosta)
+* FeltonMac(Felton McCarty)
 
-## License
+
