@@ -34,8 +34,8 @@ heartBeat is a web-based online dating/social application centered around connec
 * Edit profile information
   *  User can edit profile information including personal information as well as song, genre and artist choices 
   *  User can add personal profile picture to profile to be displayed on profile page
-*  View other users with similar music tastes
-  *  User can select the "discover profiles" page to view other users with similar choices for genre, top artists and favorite songs
+* View other users with similar music tastes
+  *  User can select the "discover profiles" page to view other users with similar choices for genre, top artists and favorite songs 
   *  User can select match or unmatch with each profile page displayed under discover profiles
 *  View profiles with mutual matches
   *  User can view other users who they chose to match with that also chose to match with the user
