@@ -37,9 +37,10 @@ heartBeat is a web-based online dating/social application centered around connec
 * View other users with similar music tastes
   *  User can select the "discover profiles" page to view other users with similar choices for genre, top artists and favorite songs 
   *  User can select match or unmatch with each profile page displayed under discover profiles
-*  View profiles with mutual matches
-  *  User can view other users who they chose to match with that also chose to match with the user
-  *  Users will recieve a popup notification for mutual matches     
+* View profiles with mutual matches
+  *  User can view other users who they chose to match with that also chose to match with the user 
+  *  Users will recieve a popup notification for mutual matches
+  
 
 
 To-do list:
