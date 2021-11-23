@@ -31,9 +31,8 @@ heartBeat is a web-based online dating/social application centered around connec
   *  All passwords are encrypted in database
   *  OAuth token is generated to allow user to access information from spotify API
   *  User can view home page which displays personal infomration and profile picture as well as information about their selected favorite songs, artists, genres using information from spotify API
-
-*  Edit profile information
-  *  User can edit profile information including personal information as well as song, genre and artist choices
+* Edit profile information
+  *  User can edit profile information including personal information as well as song, genre and artist choices 
   *  User can add personal profile picture to profile to be displayed on profile page
 *  View other users with similar music tastes
   *  User can select the "discover profiles" page to view other users with similar choices for genre, top artists and favorite songs
