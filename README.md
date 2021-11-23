@@ -51,14 +51,14 @@ To-do list:
    
 Frontend:
  * Use git clone to clone https://github.com/tubigervie/heartBeat-frontend-synergy.git onto local machine
- * Open project repository in IDE(VsCode etc.)
+ * Open project repository in IDE (VsCode etc.)
  * Run npm install to install required dependencies from package.json
  * Navigate to app/services/account-service, change the serverUrl variable to match your machine's localhost
  * In account-service
 
 Backend:
  * Use git clone to clone https://github.com/tubigervie/heartBeat-synergy.git   
- * Open project repository in IDE(Eclipse etc.)
+ * Open project repository in IDE (Eclipse etc.)
  * Navigate to src/main/resources and open the application.properties file
  * Change the categories under #Database Credentials to match the endpoint of your AWS RDS
 
@@ -72,10 +72,10 @@ Backend:
 
 
 ## Contributors
-* bucknermi(Michael Buckner)
-* tubigervie(Ervie Tubig)
-* Build-coder Phil Wood(Phil Wood)
-* AAcosta9600(Alejandro Acosta)
-* FeltonMac(Felton McCarty)
+* bucknermi (Michael Buckner)
+* tubigervie (Ervie Tubig)
+* Build-coder Phil Wood (Phil Wood)
+* AAcosta9600 (Alejandro Acosta)
+* FeltonMac (Felton McCarty)
 
 
