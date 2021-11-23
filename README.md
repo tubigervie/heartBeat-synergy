@@ -49,13 +49,14 @@ To-do list:
 
 ## Getting Started
    
-* Frontend:
+Frontend:
  * Use git clone to clone https://github.com/tubigervie/heartBeat-frontend-synergy.git onto local machine
  * Open project repository in IDE(VsCode etc.)
  * Run npm install to install required dependencies from package.json
  * Navigate to app/services/account-service, change the serverUrl variable to match your machine's localhost
  * In account-service
-* Backend:
+
+Backend:
  * Use git clone to clone https://github.com/tubigervie/heartBeat-synergy.git   
  * Open project repository in IDE(Eclipse etc.)
  * Navigate to src/main/resources and open the application.properties file
@@ -71,7 +72,10 @@ To-do list:
 
 
 ## Contributors
-
-
+bucknermi(Michael Buckner)
+tubigervie(Ervie Tubig)
+Build-coder Phil Wood(Phil Wood)
+AAcosta9600(Alejandro Acosta)
+FeltonMac(Felton McCarty)
 
 ## License
